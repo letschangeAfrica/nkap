@@ -6,5 +6,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   test: {
     environment: 'node',
+    globals: true,
+    setupFiles: './src/setupTests.js',
   },
 })
