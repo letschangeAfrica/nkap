@@ -33,3 +33,44 @@ export function costByService(transfers) {
     .map((g) => ({ service: g.service, count: g.count, cost: Math.round((g.fees / g.sent) * 1000) / 10 }))
     .sort((a, b) => a.cost - b.cost)
 }
+
+/** Income, expenses and balance (EUR) for transactions, optionally for one month. */
+export function transactionTotals(transactions, month) {
+  const list = month ? transactions.filter((t) => monthKey(t.date) === month) : transactions
+  const income = round2(list.filter((t) => t.type === 'income').reduce((sum, t) => sum + t.amount, 0))
+  const expenses = round2(list.filter((t) => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0))
+  return { income, expenses, balance: round2(income - expenses) }
+}
+
+/** The last `count` months, oldest first, as YYYY-MM keys. */
+export function lastMonths(count, now = new Date()) {
+  const keys = []
+  for (let i = count - 1; i >= 0; i -= 1) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    keys.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
+  }
+  return keys
+}
+
+/** Per month: what I spent on my life (expenses) vs what I sent home (EUR). */
+export function monthlySeries(transactions, transfers, count = 6, now = new Date()) {
+  return lastMonths(count, now).map((key) => ({
+    key,
+    life: transactionTotals(transactions, key).expenses,
+    home: transferTotals(transfers, key).sent,
+  }))
+}
+
+/**
+ * How much less the given month's transfers would have cost with the cheapest
+ * service the user has used (EUR). 0 when there is nothing to compare.
+ */
+export function potentialSavings(transfers, month) {
+  const services = costByService(transfers)
+  if (services.length < 2) return { cheapest: services[0] ?? null, savings: 0 }
+  const cheapest = services[0]
+  const savings = transfers
+    .filter((t) => monthKey(t.date) === month)
+    .reduce((sum, t) => sum + Math.max(0, t.fee - (t.amount * cheapest.cost) / 100), 0)
+  return { cheapest, savings: round2(savings) }
+}

@@ -37,3 +37,16 @@
 @media (prefers-reduced-motion: reduce) {
   .nk-stitch-run { animation: none; }
 }
+
+/* Chart bars grow from the baseline */
+.nk-grow {
+  transform-origin: bottom;
+  animation: nk-grow 500ms ease-out both;
+}
+@keyframes nk-grow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nk-grow { animation: none; }
+}
