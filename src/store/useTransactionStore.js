@@ -1,0 +1,43 @@
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { parseAmount } from '../utils/currency'
+
+export const CATEGORIES = {
+  income: ['Salary', 'Scholarship', 'Freelance', 'Family help', 'Other income'],
+  expense: ['Rent', 'Food', 'Transport', 'Phone & internet', 'Education', 'Health', 'Leisure', 'Other'],
+}
+
+/** Personal income and expenses in EUR (the "my life" side of the budget). */
+export const useTransactionStore = create(
+  persist(
+    (set) => ({
+      transactions: [],
+
+      /** Returns { ok: true, transaction } or { ok: false, error } */
+      addTransaction: ({ type, amount, category, date, note = '' }) => {
+        const value = parseAmount(amount)
+        if (type !== 'income' && type !== 'expense') return { ok: false, error: 'Choose income or expense.' }
+        if (!Number.isFinite(value) || value <= 0) return { ok: false, error: 'Enter an amount greater than 0 €.' }
+        if (!category) return { ok: false, error: 'Choose a category.' }
+        if (!date) return { ok: false, error: 'Choose a date.' }
+
+        const transaction = {
+          id: crypto.randomUUID(),
+          createdAt: Date.now(),
+          type,
+          amount: Math.round(value * 100) / 100,
+          category,
+          date,
+          note: note.trim(),
+        }
+        set((state) => ({ transactions: [transaction, ...state.transactions] }))
+        return { ok: true, transaction }
+      },
+
+      removeTransaction: (id) => set((state) => ({ transactions: state.transactions.filter((t) => t.id !== id) })),
+
+      clearTransactions: () => set({ transactions: [] }),
+    }),
+    { name: 'nkap-transactions', version: 1 },
+  ),
+)
