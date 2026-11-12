@@ -4,6 +4,8 @@ import { formatEur } from '../utils/currency'
 import { formatDate } from '../utils/dates'
 import { sortByDateDesc } from '../utils/stats'
 import CostBadge from './CostBadge'
+import TrashIcon from './TrashIcon'
+import EmptyState from './EmptyState'
 
 function DeleteButton({ transfer, onDelete }) {
   return (
@@ -13,9 +15,7 @@ function DeleteButton({ transfer, onDelete }) {
       aria-label={`Delete transfer to ${transfer.recipient} on ${formatDate(transfer.date)}`}
       className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted transition-colors hover:bg-indigo-100 hover:text-fee"
     >
-      <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-        <path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+      <TrashIcon />
     </button>
   )
 }
@@ -34,14 +34,9 @@ function TransferHistory() {
       <h2 className="border-b border-indigo-100 px-6 py-4 font-display text-xl font-semibold">Transfer history</h2>
 
       {sorted.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 px-6 py-12 text-center">
-          <svg viewBox="0 0 48 48" className="h-12 w-12 text-indigo-100" aria-hidden="true">
-            <path d="M24 3 L45 24 L24 45 L3 24 Z" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 3" />
-            <circle cx="24" cy="24" r="5" fill="currentColor" />
-          </svg>
-          <p className="font-semibold">No transfers yet</p>
-          <p className="max-w-xs text-sm text-muted">Record your first transfer to see what really arrived and what it cost you.</p>
-        </div>
+        <EmptyState title="No transfers yet">
+          Record your first transfer to see what really arrived and what it cost you.
+        </EmptyState>
       ) : (
         <>
           {/* Desktop: table */}
