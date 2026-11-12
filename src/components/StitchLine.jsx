@@ -2,10 +2,10 @@
  * Ndop "running stitch" connector between EUR and XAF.
  * Changing `trigger` remounts the line, which replays the stitch animation.
  */
-function StitchLine({ trigger }) {
+function StitchLine({ trigger, from = 'EUR', to = '× 655.957 → XAF', dark = false }) {
   return (
-    <div className="flex items-center gap-3 font-mono text-xs text-muted" aria-hidden="true">
-      <span>EUR</span>
+    <div className={`flex items-center gap-3 font-mono text-xs ${dark ? 'text-indigo-100/80' : 'text-muted'}`} aria-hidden="true">
+      <span>{from}</span>
       <svg className="h-2 flex-1" viewBox="0 0 300 8" preserveAspectRatio="none">
         <line
           key={trigger}
@@ -18,10 +18,10 @@ function StitchLine({ trigger }) {
           strokeWidth="2.5"
           strokeDasharray="7 6"
           strokeLinecap="round"
-          style={{ color: 'var(--color-indigo-600)' }}
+          style={{ color: dark ? 'var(--color-cloth)' : 'var(--color-indigo-600)' }}
         />
       </svg>
-      <span>× 655.957 → XAF</span>
+      <span>{to}</span>
     </div>
   )
 }
