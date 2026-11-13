@@ -23,6 +23,15 @@ Bank apps track your spending. Transfer apps (Wise, Orange Money, Western Union�
 | **Converter** | EUR ⇄ XAF with the fixed peg, plus USD, GBP, CAD, CHF and CNY with live ECB rates. Works offline with the last saved rates. |
 | **Settings** | Family commitments (e.g. school fees per month, in XAF), load demo data, delete all data. |
 
+## Languages
+
+Nkap is available in **English**, **French** and **Cameroonian Pidgin English** (Kamtok). The first visit follows the browser's language; the switch in the top bar (and in Settings) changes it and remembers the choice on the device.
+
+- Numbers, money and dates follow the language: `92,228 XAF` in English, `92 228 FCFA` in French, `92,228 FCFA` in Pidgin.
+- `<html lang>`, the page title and the demo video change with the language.
+- The Pidgin translation is a **draft** that should be reviewed by a native speaker.
+- To add a language: copy `src/i18n/en.js` to `src/i18n/<code>.js`, translate the values, and add one line to `LANGUAGES` in `src/i18n/index.js`. A test fails if any key or `{placeholder}` is missing.
+
 ## How the money maths works
 
 - The CFA franc (XAF) is pegged to the euro by the BEAC: **1 EUR = 655.957 XAF**. EUR ⇄ XAF is calculated locally and is always exact, even offline.
