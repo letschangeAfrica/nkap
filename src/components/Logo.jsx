@@ -1,9 +1,16 @@
-// Ndop-inspired mark: stitched lozenge with a solid centre
+// Nkap mark: the eight-spoke wheel from Ndop cloth
 function Logo({ className = 'h-7 w-7' }) {
+  const spokes = Array.from({ length: 8 }, (_, i) => {
+    const a = (i * Math.PI) / 4 + Math.PI / 8
+    return [16 + Math.cos(a) * 11.5, 16 + Math.sin(a) * 11.5]
+  })
   return (
     <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
-      <path d="M16 2 L30 16 L16 30 L2 16 Z" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="3 2.5" />
-      <path d="M16 9 L23 16 L16 23 L9 16 Z" fill="currentColor" />
+      <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="2.2" />
+      {spokes.map(([x, y], i) => (
+        <line key={i} x1="16" y1="16" x2={x} y2={y} stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      ))}
+      <circle cx="16" cy="16" r="3" fill="currentColor" />
     </svg>
   )
 }

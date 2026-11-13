@@ -67,7 +67,9 @@ src/
 
 - **No account, no server, no bank connection.** Nkap never asks for a login or bank credentials.
 - All data is stored only in the browser's `localStorage` on the user's device. Nothing is sent anywhere.
-- The only network request is to the Frankfurter API for exchange rates. It sends no personal data.
+- The only network request is to the Frankfurter API for exchange rates. It sends no personal data. Fonts are self-hosted (no Google Fonts requests).
+- A strict Content-Security-Policy and other security headers are set in `public/_headers`.
+- Saved data is checked when it is loaded; if it still can't be displayed, an error screen offers to reset it.
 - **Settings → Delete all my data** erases everything after a confirmation.
 - User input is validated (amounts > 0, fee smaller than the amount) and rendered by React, which escapes it. The app never uses `dangerouslySetInnerHTML`.
 - Limit: data in `localStorage` is not encrypted. Anyone with access to the unlocked device and browser can read it. Don't use Nkap on a shared computer.

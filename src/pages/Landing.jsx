@@ -1,47 +1,28 @@
 import { Link } from 'react-router-dom'
 import Logo from '../components/Logo'
 import NdopPattern from '../components/NdopPattern'
+import NdopCloth from '../components/ndop/NdopCloth'
+import NdopBand from '../components/ndop/NdopBand'
+import { Wheel } from '../components/ndop/motifs'
+import HeroCalculator from '../components/HeroCalculator'
 
 const FEATURES = [
   {
     title: 'See every fee',
     text: 'Record a transfer once. Nkap shows what arrived in XAF and what the service cost you, in percent.',
-    icon: <><path d="M16 2 L30 16 L16 30 L2 16 Z" strokeDasharray="3 2.5" /><path d="M16 9 L23 16 L16 23 L9 16 Z" fill="currentColor" /></>,
+    icon: <><path d="M16 1 L25 16 L16 31 L7 16 Z" /><path d="M16 8 L20.5 16 L16 24 L11.5 16 Z" /><circle cx="5" cy="5" r="1.2" fill="currentColor" /><circle cx="27" cy="5" r="1.2" fill="currentColor" /><circle cx="5" cy="27" r="1.2" fill="currentColor" /><circle cx="27" cy="27" r="1.2" fill="currentColor" /></>,
   },
   {
     title: 'EUR and XAF, exact',
     text: 'The CFA franc is pegged at 1 € = 655.957 XAF, so conversions stay exact, even when the rates API is offline.',
-    icon: <><circle cx="16" cy="16" r="14" /><circle cx="16" cy="16" r="8" strokeDasharray="3 2.5" /><circle cx="16" cy="16" r="3" fill="currentColor" /></>,
+    icon: <Wheel cx={16} cy={16} r={13} sw={1.5} />,
   },
   {
     title: 'Plan family commitments',
     text: 'Set recurring support like school fees and see each month how much you have sent against the plan.',
-    icon: <><rect x="3" y="3" width="26" height="26" /><path d="M16 3 V29 M3 16 H29" strokeDasharray="3 2.5" /></>,
+    icon: <path d="M2 3 H30 M2 12 H30 M2 21 H30 M2 30 H30 M11 3 V12 M23 3 V12 M6 12 V21 M18 12 V21 M13 21 V30 M26 21 V30" />,
   },
 ]
-
-function TransferCard({ className = '' }) {
-  return (
-    <div className={`rounded-lg bg-white p-5 text-ink shadow-[0_16px_40px_rgba(10,18,51,0.35)] ${className}`}>
-      <p className="text-xs text-muted">Transfer · Wise · 12 Nov</p>
-      <div className="mt-3 flex items-baseline justify-between gap-4">
-        <span className="text-sm text-muted">You sent</span>
-        <span className="font-mono text-lg font-semibold">100.00 €</span>
-      </div>
-      <svg className="my-3 h-1.5 w-full" viewBox="0 0 300 6" preserveAspectRatio="none" aria-hidden="true">
-        <line className="nk-stitch-run" x1="0" y1="3" x2="300" y2="3" stroke="var(--color-indigo-600)" strokeWidth="2.5" strokeDasharray="7 6" strokeLinecap="round" />
-      </svg>
-      <div className="flex items-baseline justify-between gap-4">
-        <span className="text-sm text-muted">Family received</span>
-        <span className="font-mono text-2xl font-semibold text-received">64,809 XAF</span>
-      </div>
-      <div className="mt-4 flex justify-between gap-4 border-t border-indigo-100 pt-3 text-xs">
-        <span className="text-muted">Fee 1.20 €</span>
-        <span className="font-mono font-semibold text-received">Cost 1.2% · Low</span>
-      </div>
-    </div>
-  )
-}
 
 function Landing() {
   return (
@@ -73,7 +54,7 @@ function Landing() {
           <path d="M120 -40 L440 280" stroke="currentColor" />
         </svg>
 
-        <section className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-4 pb-20 pt-14 md:px-8 lg:grid-cols-2 lg:pb-24 lg:pt-20">
+        <section className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-4 pb-20 pt-14 md:px-8 lg:grid-cols-[5fr_6fr] lg:pb-24 lg:pt-20">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-indigo-100/70">EUR ⇄ XAF · for the diaspora</p>
             <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight md:text-6xl">
@@ -94,24 +75,15 @@ function Landing() {
             <p className="mt-6 text-sm text-indigo-100/70">No account · No bank login · Data stays on your device</p>
           </div>
 
-          <div className="relative pb-16 sm:pb-10 lg:pb-0">
-            <div className="relative h-72 overflow-hidden rounded-lg bg-indigo-800 text-indigo-600 sm:h-96">
-              <NdopPattern id="ndop-hero" className="absolute inset-0 h-full w-full" />
-              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-indigo-800 to-transparent" />
+          <div className="relative">
+            <div className="relative h-56 overflow-hidden rounded-lg bg-indigo-800 text-cloth/80 sm:h-72 lg:ml-32 lg:h-[32rem]">
+              <NdopCloth id="ndop-hero" className="absolute inset-0 h-full w-full" />
             </div>
-            <TransferCard className="absolute -bottom-2 left-4 right-4 sm:left-auto sm:right-auto sm:-left-6 sm:w-80 lg:-bottom-8" />
+            <HeroCalculator className="relative mx-3 -mt-24 sm:mx-auto sm:max-w-md lg:absolute lg:left-0 lg:top-1/2 lg:mx-0 lg:mt-0 lg:w-[22.5rem] lg:-translate-y-1/2" />
           </div>
         </section>
 
-        <svg className="block h-2.5 w-full text-cloth" aria-hidden="true">
-          <defs>
-            <pattern id="nk-chequer-hero" width="10" height="10" patternUnits="userSpaceOnUse">
-              <rect width="5" height="5" fill="currentColor" />
-              <rect x="5" y="5" width="5" height="5" fill="currentColor" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#nk-chequer-hero)" opacity="0.18" />
-        </svg>
+        <NdopBand id="nk-band-hero" className="h-4 text-cloth/25" />
       </div>
 
       <main>
@@ -139,8 +111,8 @@ function Landing() {
 
         {/* ---------- why ---------- */}
         <section id="why" className="mx-auto grid max-w-6xl scroll-mt-6 grid-cols-1 items-center gap-12 px-4 pb-20 md:px-8 md:pb-24 lg:grid-cols-2 lg:gap-24">
-          <div className="relative order-2 h-72 overflow-hidden rounded-lg bg-indigo-100 text-indigo-600/25 sm:h-96 lg:order-1">
-            <NdopPattern id="ndop-why" className="absolute inset-0 h-full w-full" />
+          <div className="relative order-2 h-80 overflow-hidden rounded-lg bg-indigo-100 text-indigo-600/30 sm:h-96 lg:order-1">
+            <NdopCloth id="ndop-why" ground="var(--color-indigo-100)" className="absolute inset-0 h-full w-full" />
             <div className="absolute inset-0 flex flex-col justify-end gap-3 p-6 sm:p-8">
               <div className="w-fit rounded-md bg-white p-4 text-ink shadow-sm">
                 <p className="text-xs text-muted">Same 150 € sent home</p>
@@ -167,7 +139,7 @@ function Landing() {
 
         {/* ---------- privacy ---------- */}
         <section id="privacy" className="relative scroll-mt-6 overflow-hidden bg-indigo-950 text-cloth">
-          <NdopPattern id="ndop-privacy" className="absolute inset-0 h-full w-full text-indigo-800" opacity={0.6} />
+          <NdopPattern id="ndop-privacy" className="absolute inset-0 h-full w-full text-indigo-800" opacity={0.8} />
           <div className="relative mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 px-4 py-16 md:flex-row md:items-center md:px-8">
             <div>
               <h2 className="font-display text-3xl font-bold">Private by design</h2>
@@ -182,7 +154,8 @@ function Landing() {
         </section>
       </main>
 
-      <footer className="border-t border-white/10 bg-indigo-950 text-sm text-indigo-100/70">
+      <NdopBand id="nk-band-footer" className="h-4 bg-indigo-950 text-cloth/20" />
+      <footer className="bg-indigo-950 text-sm text-indigo-100/70">
         <div className="mx-auto flex max-w-6xl flex-col justify-between gap-3 px-4 py-8 md:flex-row md:px-8">
           <p>Nkap · ALX Front-End Capstone · Ismaël Ariel Kagou Manga</p>
           <p>Visual language inspired by Ndop cloth of the Bamileke and Grassfields chiefdoms of Cameroon.</p>

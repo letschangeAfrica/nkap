@@ -88,6 +88,7 @@ function TransferForm() {
           <input
             className={fieldClass}
             type="text"
+            maxLength={60}
             placeholder="Maman, Douala"
             value={recipient}
             onChange={(e) => { setRecipient(e.target.value); clearMessages() }}

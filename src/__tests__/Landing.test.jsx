@@ -1,9 +1,11 @@
 // @vitest-environment jsdom
 import { describe, test, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import Landing from '../pages/Landing'
 import { transferResult } from '../utils/currency'
+import { compareServices, exampleFee, EXAMPLE_SERVICES } from '../utils/exampleFees'
 
 describe('Landing', () => {
   test('has one h1 and calls to action that open the app', () => {
@@ -18,10 +20,43 @@ describe('Landing', () => {
   test('example figures match the real calculation', () => {
     render(<MemoryRouter><Landing /></MemoryRouter>)
     expect(transferResult(100, 1.2)).toMatchObject({ received: 64809, cost: 1.2 })
-    expect(screen.getByText('64,809 XAF')).toBeInTheDocument()
+    expect(screen.getByTestId('hero-received')).toHaveTextContent('64,809 XAF')
     for (const [fee, shown] of [[1.8, '97,213 XAF'], [6.45, '94,163 XAF'], [14.2, '89,079 XAF']]) {
       expect(transferResult(150, fee).received.toLocaleString('en-US') + ' XAF').toBe(shown)
       expect(screen.getByText(shown)).toBeInTheDocument()
     }
+  })
+})
+
+describe('Hero calculator', () => {
+  test('example fees: 100 € with Wise costs 1.20 €, and Wise is the cheapest', () => {
+    expect(exampleFee(100, EXAMPLE_SERVICES[0])).toBe(1.2)
+    expect(compareServices(100).best.name).toBe('Wise')
+  })
+
+  test('changing the amount and the service updates what reaches home', async () => {
+    const user = userEvent.setup()
+    render(<MemoryRouter><Landing /></MemoryRouter>)
+    const input = screen.getByLabelText(/you send/i)
+    await user.clear(input)
+    await user.type(input, '200')
+    const wise = transferResult(200, exampleFee(200, EXAMPLE_SERVICES[0])).received
+    expect(screen.getByTestId('hero-received')).toHaveTextContent(`${wise.toLocaleString('en-US')} XAF`)
+
+    await user.click(screen.getByLabelText('Western Union'))
+    const wu = transferResult(200, exampleFee(200, EXAMPLE_SERVICES[2])).received
+    expect(screen.getByTestId('hero-received')).toHaveTextContent(`${wu.toLocaleString('en-US')} XAF`)
+    expect(screen.getByText(`+${(wise - wu).toLocaleString('en-US')} XAF`)).toBeInTheDocument()
+  })
+
+  test('explains an empty amount or a fee larger than the amount', async () => {
+    const user = userEvent.setup()
+    render(<MemoryRouter><Landing /></MemoryRouter>)
+    const input = screen.getByLabelText(/you send/i)
+    await user.clear(input)
+    expect(screen.getByText(/enter an amount/i)).toBeInTheDocument()
+    await user.type(input, '3')
+    await user.click(screen.getByLabelText('Western Union'))
+    expect(screen.getByText(/example fee is larger/i)).toBeInTheDocument()
   })
 })

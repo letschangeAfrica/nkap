@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { parseAmount } from '../utils/currency'
+import { cleanText, isCommitment, sanitizedMerge } from '../utils/validate'
 
 /** Planned recurring family support, in XAF per month (e.g. school fees). */
 export const useCommitmentStore = create(
@@ -10,10 +11,11 @@ export const useCommitmentStore = create(
 
       addCommitment: ({ label, monthlyXaf }) => {
         const value = parseAmount(monthlyXaf)
-        if (!label || !label.trim()) return { ok: false, error: 'Give the commitment a name.' }
+        const name = cleanText(label)
+        if (!name) return { ok: false, error: 'Give the commitment a name.' }
         if (!Number.isFinite(value) || value <= 0) return { ok: false, error: 'Enter a monthly amount greater than 0 XAF.' }
 
-        const commitment = { id: crypto.randomUUID(), label: label.trim(), monthlyXaf: Math.round(value) }
+        const commitment = { id: crypto.randomUUID(), label: name, monthlyXaf: Math.round(value) }
         set((state) => ({ commitments: [...state.commitments, commitment] }))
         return { ok: true, commitment }
       },
@@ -22,6 +24,6 @@ export const useCommitmentStore = create(
 
       clearCommitments: () => set({ commitments: [] }),
     }),
-    { name: 'nkap-commitments', version: 1 },
+    { name: 'nkap-commitments', version: 1, merge: sanitizedMerge('commitments', isCommitment) },
   ),
 )

@@ -48,6 +48,16 @@ export function formatRate(n) {
   return n.toPrecision(4)
 }
 
+/** Keep only the currencies we offer, with finite positive rates. */
+function sanitizeRates(raw) {
+  const rates = {}
+  for (const code of LIVE_CODES) {
+    const value = raw?.[code]
+    if (typeof value === 'number' && Number.isFinite(value) && value > 0) rates[code] = value
+  }
+  return rates
+}
+
 /**
  * Fetch today's ECB rates (per 1 EUR) from Frankfurter. Throws on network
  * errors, timeouts, bad status codes and unexpected responses.
@@ -59,11 +69,7 @@ export async function fetchEurRates({ fetchImpl = globalThis.fetch, timeoutMs = 
     const res = await fetchImpl(`${RATES_URL}?base=EUR&symbols=${LIVE_CODES.join(',')}`, { signal: controller.signal })
     if (!res.ok) throw new Error(`Rate service answered ${res.status}`)
     const data = await res.json()
-    const rates = {}
-    for (const code of LIVE_CODES) {
-      const value = data?.rates?.[code]
-      if (typeof value === 'number' && value > 0) rates[code] = value
-    }
+    const rates = sanitizeRates(data?.rates)
     if (Object.keys(rates).length === 0 || typeof data.date !== 'string') throw new Error('Unexpected response from the rate service')
     return { date: data.date, rates }
   } finally {
@@ -74,7 +80,9 @@ export async function fetchEurRates({ fetchImpl = globalThis.fetch, timeoutMs = 
 export function readCachedRates() {
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY))
-    return cached && typeof cached.date === 'string' && cached.rates ? cached : null
+    if (!cached || typeof cached.date !== 'string') return null
+    const rates = sanitizeRates(cached.rates)
+    return Object.keys(rates).length ? { date: cached.date, rates } : null
   } catch {
     return null
   }

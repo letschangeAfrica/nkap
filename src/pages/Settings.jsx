@@ -56,7 +56,7 @@ function Settings() {
         <form onSubmit={handleAdd} noValidate className="mt-5 grid grid-cols-1 items-end gap-4 sm:grid-cols-[1fr_12rem_auto]">
           <label className="text-sm font-semibold">
             Name
-            <input className={fieldClass} type="text" placeholder="School fees" value={label} onChange={(e) => { setLabel(e.target.value); setError('') }} />
+            <input className={fieldClass} type="text" maxLength={60} placeholder="School fees" value={label} onChange={(e) => { setLabel(e.target.value); setError('') }} />
           </label>
           <label className="text-sm font-semibold">
             Per month (XAF)

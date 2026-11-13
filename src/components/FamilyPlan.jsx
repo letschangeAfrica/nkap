@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { formatXaf } from '../utils/currency'
+import Logo from './Logo'
 
 /** Stitched progress bar: XAF received this month vs planned family commitments. */
 function FamilyPlan({ planned, received, monthName }) {
@@ -16,7 +17,8 @@ function FamilyPlan({ planned, received, monthName }) {
   const remaining = Math.max(0, planned - received)
 
   return (
-    <section className="flex flex-col gap-3 rounded-lg bg-indigo-950 p-6 text-cloth">
+    <section className="relative flex flex-col gap-3 overflow-hidden rounded-lg bg-indigo-950 p-6 text-cloth">
+      <Logo className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 text-cloth/[0.07]" />
       <h2 className="font-display text-lg font-semibold">Family plan · {monthName}</h2>
       <svg viewBox="0 0 100 10" preserveAspectRatio="none" className="h-2.5 w-full" role="img" aria-label={`${pct}% of the monthly plan sent`}>
         <line x1="0" y1="5" x2="100" y2="5" stroke="#4B5A9E" strokeWidth="2" strokeDasharray="2 1.6" />

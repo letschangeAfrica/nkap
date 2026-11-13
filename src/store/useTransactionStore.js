@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { parseAmount } from '../utils/currency'
+import { validDate, cleanText, isTransaction, sanitizedMerge } from '../utils/validate'
 
 export const CATEGORIES = {
   income: ['Salary', 'Scholarship', 'Freelance', 'Family help', 'Other income'],
@@ -18,8 +19,8 @@ export const useTransactionStore = create(
         const value = parseAmount(amount)
         if (type !== 'income' && type !== 'expense') return { ok: false, error: 'Choose income or expense.' }
         if (!Number.isFinite(value) || value <= 0) return { ok: false, error: 'Enter an amount greater than 0 €.' }
-        if (!category) return { ok: false, error: 'Choose a category.' }
-        if (!date) return { ok: false, error: 'Choose a date.' }
+        if (!CATEGORIES[type].includes(category)) return { ok: false, error: 'Choose a category.' }
+        if (!validDate(date)) return { ok: false, error: 'Choose a date (today or earlier).' }
 
         const transaction = {
           id: crypto.randomUUID(),
@@ -28,7 +29,7 @@ export const useTransactionStore = create(
           amount: Math.round(value * 100) / 100,
           category,
           date,
-          note: note.trim(),
+          note: cleanText(note, 80),
         }
         set((state) => ({ transactions: [transaction, ...state.transactions] }))
         return { ok: true, transaction }
@@ -38,6 +39,6 @@ export const useTransactionStore = create(
 
       clearTransactions: () => set({ transactions: [] }),
     }),
-    { name: 'nkap-transactions', version: 1 },
+    { name: 'nkap-transactions', version: 1, merge: sanitizedMerge('transactions', isTransaction) },
   ),
 )

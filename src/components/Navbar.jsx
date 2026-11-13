@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router-dom'
 import Logo from './Logo'
+import NdopBand from './ndop/NdopBand'
 
 export const NAV_LINKS = [
   { to: '/dashboard', label: 'Dashboard', short: 'Home' },
@@ -34,15 +35,7 @@ function Navbar() {
           ))}
         </ul>
       </nav>
-      <svg className="block h-2 w-full" aria-hidden="true">
-        <defs>
-          <pattern id="nk-chequer" width="8" height="8" patternUnits="userSpaceOnUse">
-            <rect width="4" height="4" fill="currentColor" />
-            <rect x="4" y="4" width="4" height="4" fill="currentColor" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#nk-chequer)" opacity="0.16" />
-      </svg>
+      <NdopBand id="nk-band-nav" className="h-3 text-cloth/20" />
     </header>
   )
 }

@@ -16,11 +16,16 @@ export function xafToEur(xaf) {
   return Math.round((xaf / EUR_TO_XAF) * 100) / 100
 }
 
+// Plain decimal amounts only: up to 999,999,999.99, at most 2 decimals.
+// Rejects hex ("0x10"), binary, exponents ("1e300") and other Number() quirks.
+const AMOUNT_RE = /^\d{1,9}(?:[.,]\d{1,2})?$/
+
 /** Turn user input ("100", "100,50", " 12.3 ") into a number, or NaN. */
 export function parseAmount(value) {
-  if (typeof value === 'number') return value
-  if (typeof value !== 'string' || value.trim() === '') return NaN
-  return Number(value.trim().replace(',', '.'))
+  if (typeof value === 'number') return Number.isFinite(value) ? value : NaN
+  if (typeof value !== 'string') return NaN
+  const s = value.trim()
+  return AMOUNT_RE.test(s) ? Number(s.replace(',', '.')) : NaN
 }
 
 /**
