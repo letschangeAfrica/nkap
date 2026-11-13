@@ -68,3 +68,25 @@ describe('Reveal', () => {
     expect(screen.getByText(/two money worlds/i)).toBeVisible()
   })
 })
+
+describe('Remittance statistic', () => {
+  test('shows the World Bank figure with a link to its source', () => {
+    render(<MemoryRouter><Landing /></MemoryRouter>)
+    expect(screen.getByText('8.46%', { selector: '.sr-only' })).toBeInTheDocument()
+    const link = screen.getByRole('link', { name: /world bank, remittance prices worldwide/i })
+    expect(link).toHaveAttribute('href', expect.stringContaining('remittanceprices.worldbank.org'))
+    expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'))
+  })
+})
+
+describe('Demo video', () => {
+  test('is silent, looped, lazy and described for screen readers', () => {
+    render(<MemoryRouter><Landing /></MemoryRouter>)
+    const video = screen.getByLabelText(/demo: a 100 € transfer/i)
+    expect(video.muted).toBe(true)
+    expect(video).toHaveAttribute('loop')
+    expect(video).toHaveAttribute('preload', 'none')
+    expect(video.querySelector('source')).toHaveAttribute('type', 'video/mp4')
+    expect(screen.getByRole('button', { name: /play the demo/i })).toBeInTheDocument()
+  })
+})

@@ -6,6 +6,8 @@ import NdopBand from '../components/ndop/NdopBand'
 import { Wheel } from '../components/ndop/motifs'
 import HeroCalculator from '../components/HeroCalculator'
 import Reveal from '../components/Reveal'
+import RemittanceStat from '../components/RemittanceStat'
+import DemoVideo from '../components/DemoVideo'
 import { compareServices } from '../utils/exampleFees'
 import { formatXaf } from '../utils/currency'
 
@@ -112,10 +114,33 @@ function Landing() {
               </Reveal>
             ))}
           </ol>
+
+          <div className="mt-16 grid grid-cols-1 items-center gap-12 rounded-lg bg-cloth px-6 py-12 md:px-12 lg:grid-cols-2">
+            <Reveal>
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-indigo-600">See it in 12 seconds</p>
+              <h3 className="mt-3 font-display text-2xl font-bold md:text-3xl">One transfer, from fee to family.</h3>
+              <ol className="mt-6 flex flex-col gap-4">
+                {[
+                  ['Record a transfer', '100 € sent with a 1.20 € fee.'],
+                  ['See what arrives', '64,809 XAF reach home, in real time.'],
+                  ['Know the cost', 'A 1.2% badge: low, medium or high.'],
+                  ['Watch the month update', 'The dashboard turns fees into XAF your family lost.'],
+                ].map(([title, text], i) => (
+                  <li key={title} className="flex gap-4">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-indigo-600 font-mono text-xs text-indigo-600">{i + 1}</span>
+                    <p><span className="font-semibold">{title}.</span> <span className="text-muted">{text}</span></p>
+                  </li>
+                ))}
+              </ol>
+            </Reveal>
+            <DemoVideo className="mb-12 sm:mb-0" />
+          </div>
         </section>
 
+        <RemittanceStat />
+
         {/* ---------- why ---------- */}
-        <section id="why" className="mx-auto grid max-w-6xl scroll-mt-6 grid-cols-1 items-center gap-12 px-4 pb-20 md:px-8 md:pb-24 lg:grid-cols-2 lg:gap-24">
+        <section id="why" className="mx-auto grid max-w-6xl scroll-mt-6 grid-cols-1 items-center gap-12 px-4 py-20 md:px-8 md:py-24 lg:grid-cols-2 lg:gap-24">
           <Reveal className="relative order-2 h-80 overflow-hidden rounded-lg bg-indigo-100 text-indigo-600/30 sm:h-96 lg:order-1">
             <NdopCloth id="ndop-why" ground="var(--color-indigo-100)" className="absolute inset-0 h-full w-full" />
             <div className="absolute inset-0 flex flex-col justify-end gap-3 p-6 sm:p-8">
@@ -140,8 +165,8 @@ function Landing() {
               Sending money to Africa is expensive. Not knowing how expensive is worse.
             </h2>
             <p className="mt-5 text-lg text-muted">
-              The World Bank consistently ranks sub-Saharan Africa as the most expensive region in the world to send money to. Nkap
-              turns scattered transfers into one monthly picture, so you can choose the service that leaves more for your family.
+              Every transfer app shows its own fees, one at a time. Nkap puts all of them in one monthly picture, so you can see what
+              each service really costs you and choose the one that leaves more for your family.
             </p>
           </Reveal>
         </section>
