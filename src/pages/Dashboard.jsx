@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTransactionStore } from '../store/useTransactionStore'
 import { useTransferStore } from '../store/useTransferStore'
@@ -13,6 +13,10 @@ import FamilyPlan from '../components/FamilyPlan'
 import RecentActivity from '../components/RecentActivity'
 import CostBadge from '../components/CostBadge'
 import EmptyState from '../components/EmptyState'
+import Welcome from '../components/Welcome'
+import WheelIllustration from '../components/ndop/WheelIllustration'
+import { buildInsights } from '../utils/insights'
+import { welcomeDone, setWelcomeDone } from '../utils/welcome'
 
 const eur0 = (n) => `${Math.round(n).toLocaleString('en-US')} €`
 
@@ -49,6 +53,12 @@ function Dashboard() {
   }, [transactions, transfers])
 
   const isEmpty = transactions.length === 0 && transfers.length === 0
+  const [showWelcome, setShowWelcome] = useState(() => !welcomeDone())
+  const finishWelcome = () => {
+    setWelcomeDone()
+    setShowWelcome(false)
+  }
+  const insights = useMemo(() => buildInsights({ transactions, transfers, month }), [transactions, transfers, month])
 
   return (
     <div className="flex flex-col gap-8">
@@ -67,10 +77,12 @@ function Dashboard() {
         </div>
       </header>
 
-      {isEmpty ? (
+      {isEmpty && showWelcome ? (
+        <Welcome onDone={finishWelcome} onDemo={() => { finishWelcome(); loadDemoData() }} />
+      ) : isEmpty ? (
         <section className="rounded-lg border border-indigo-100">
           <EmptyState
-            title="Welcome to Nkap"
+            title="Nothing recorded yet"
             action={
               <div className="mt-2 flex flex-wrap justify-center gap-3">
                 <Link to="/sent-home" className="rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-800">Record a transfer</Link>
@@ -96,6 +108,17 @@ function Dashboard() {
             <KpiTile label="Sent home" value={home.sent} format={eur0} hint={`↳ ${formatXaf(home.received)} received`} hintTone="text-received font-semibold" />
             <KpiTile label="Lost to fees" value={home.fees} format={formatEur} tone="text-fee" hint={home.sent > 0 ? `${home.cost}% of what you sent` : 'No transfers yet'} />
           </section>
+
+          {insights.length > 0 && (
+            <section aria-label="This month in a few words" className="flex items-start gap-4 rounded-lg bg-indigo-100/60 p-5">
+              <WheelIllustration className="hidden h-12 w-12 shrink-0 sm:block" />
+              <ul className="flex flex-col gap-1.5">
+                {insights.map((insight) => (
+                  <li key={insight.id} className="text-ink">{insight.text}</li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
             <div className="lg:col-span-8"><MonthlyChart series={series} /></div>

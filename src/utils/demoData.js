@@ -3,6 +3,7 @@ import { useTransferStore } from '../store/useTransferStore'
 import { useCommitmentStore } from '../store/useCommitmentStore'
 import { transferResult } from './currency'
 import { lastMonths } from './stats'
+import { setWelcomeDone } from './welcome'
 
 /**
  * Six months of realistic example data ending in the current month.
@@ -75,4 +76,5 @@ export function clearAllData() {
   useTransactionStore.getState().clearTransactions()
   useTransferStore.getState().clearTransfers()
   useCommitmentStore.getState().clearCommitments()
+  setWelcomeDone(false)
 }

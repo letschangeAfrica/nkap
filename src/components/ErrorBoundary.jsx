@@ -1,6 +1,6 @@
 import { Component } from 'react'
 
-export const STORAGE_KEYS = ['nkap-transactions', 'nkap-transfers', 'nkap-commitments', 'nkap-rates']
+export const STORAGE_KEYS = ['nkap-transactions', 'nkap-transfers', 'nkap-commitments', 'nkap-rates', 'nkap-welcome-done']
 
 /**
  * Last line of defence: if saved data can't be rendered, show a way to reset

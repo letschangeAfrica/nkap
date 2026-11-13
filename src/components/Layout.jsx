@@ -1,8 +1,15 @@
-import { Outlet } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
 import BottomTabBar from './BottomTabBar'
 
 function Layout() {
+  const { pathname } = useLocation()
+  // each page opens at the top, not at the previous page's scroll position
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />

@@ -17,16 +17,29 @@ beforeEach(() => {
 })
 
 describe('Dashboard', () => {
-  test('shows a welcome state, then the figures after loading demo data', async () => {
+  test('first visit: three welcome steps, then demo data shows the figures and insights', async () => {
     const user = userEvent.setup()
     renderPage(<Dashboard />)
     expect(screen.getByText(/welcome to nkap/i)).toBeInTheDocument()
+    expect(screen.getByText(/step 1 of 3/i)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /^next$/i }))
+    await user.click(screen.getByRole('button', { name: /^next$/i }))
+    expect(screen.getByText(/step 3 of 3/i)).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /explore with demo data/i }))
     expect(screen.getByLabelText(/key figures/i)).toBeInTheDocument()
     expect(screen.getAllByText(/92,228 XAF/).length).toBeGreaterThan(0)
     expect(screen.getByText(/cheapest service so far/i)).toBeInTheDocument()
-    expect(screen.getAllByText(/sent to/i).length).toBeGreaterThan(0)
+    expect(screen.getByText('This month, fees cost your family 6,166 XAF.')).toBeInTheDocument()
+    expect(localStorage.getItem('nkap-welcome-done')).toBe('1')
+  })
+
+  test('after skipping the welcome, an empty dashboard shows the wheel empty state', async () => {
+    const user = userEvent.setup()
+    renderPage(<Dashboard />)
+    await user.click(screen.getByRole('button', { name: /skip/i }))
+    expect(screen.getByText(/nothing recorded yet/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /explore with demo data/i })).toBeInTheDocument()
   })
 })
 
@@ -74,5 +87,27 @@ describe('Settings', () => {
     await user.click(screen.getByRole('button', { name: /delete all my data/i }))
     expect(screen.queryByText('School fees')).not.toBeInTheDocument()
     expect(screen.getByRole('status')).toHaveTextContent(/deleted/i)
+  })
+})
+
+describe('Layout', () => {
+  test('scrolls to the top when the page changes', async () => {
+    const { default: Layout } = await import('../components/Layout')
+    const { Routes, Route } = await import('react-router-dom')
+    const scroll = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={['/transactions']}>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/transactions" element={<p>tx</p>} />
+            <Route path="/settings" element={<p>settings</p>} />
+          </Route>
+        </Routes>
+      </MemoryRouter>,
+    )
+    scroll.mockClear()
+    await user.click(screen.getAllByRole('link', { name: /settings/i })[0])
+    expect(scroll).toHaveBeenCalledWith(0, 0)
   })
 })
