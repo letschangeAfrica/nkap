@@ -6,6 +6,8 @@ import { todayISO } from '../utils/dates'
 import { useAnimatedNumber } from '../hooks/useAnimatedNumber'
 import CostBadge from './CostBadge'
 import StitchLine from './StitchLine'
+import { formatXaf } from '../utils/currency'
+import { t, tError, formatNumber, langInfo } from '../i18n'
 
 const fieldClass =
   'mt-1.5 w-full rounded-md border border-[#B9C0DD] bg-white px-3.5 py-3 text-base text-ink focus:border-indigo-600'
@@ -34,7 +36,7 @@ function TransferForm() {
       return
     }
     setError('')
-    setSaved(`Saved: ${result.transfer.received.toLocaleString('en-US')} XAF to ${result.transfer.recipient}.`)
+    setSaved(t('transferForm.saved', { xaf: formatXaf(result.transfer.received), recipient: result.transfer.recipient }))
     setAmount('')
     setFee('')
   }
@@ -46,11 +48,11 @@ function TransferForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5 rounded-lg border border-indigo-100 p-6 md:p-7">
-      <h2 className="font-display text-xl font-semibold">New transfer</h2>
+      <h2 className="font-display text-xl font-semibold">{t('transferForm.title')}</h2>
 
       <div className="grid grid-cols-2 gap-4">
         <label className="text-sm font-semibold">
-          Amount sent (€)
+          {t('transferForm.amount')}
           <input
             className={`${fieldClass} font-mono`}
             type="text"
@@ -61,7 +63,7 @@ function TransferForm() {
           />
         </label>
         <label className="text-sm font-semibold">
-          Fee (€)
+          {t('transferForm.fee')}
           <input
             className={`${fieldClass} font-mono`}
             type="text"
@@ -74,28 +76,28 @@ function TransferForm() {
       </div>
 
       <label className="text-sm font-semibold">
-        Service
+        {t('transferForm.service')}
         <select className={fieldClass} value={service} onChange={(e) => setService(e.target.value)}>
           {SERVICES.map((s) => (
-            <option key={s}>{s}</option>
+            <option key={s} value={s}>{s === 'Other' ? t('transferForm.otherService') : s}</option>
           ))}
         </select>
       </label>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="text-sm font-semibold">
-          Recipient
+          {t('transferForm.recipient')}
           <input
             className={fieldClass}
             type="text"
             maxLength={60}
-            placeholder="Maman, Douala"
+            placeholder={t('transferForm.recipientPlaceholder')}
             value={recipient}
             onChange={(e) => { setRecipient(e.target.value); clearMessages() }}
           />
         </label>
         <label className="text-sm font-semibold">
-          Date
+          {t('common.date')}
           <input className={`${fieldClass} font-mono`} type="date" value={date} max={todayISO()} onChange={(e) => setDate(e.target.value)} />
         </label>
       </div>
@@ -103,28 +105,28 @@ function TransferForm() {
       <StitchLine trigger={preview.valid ? preview.received : 'none'} />
 
       <div className="rounded-lg bg-indigo-950 p-5 text-cloth" aria-live="polite">
-        <p className="text-sm text-indigo-100/80">Your family receives</p>
+        <p className="text-sm text-indigo-100/80">{t('transferForm.receives')}</p>
         {preview.valid ? (
           <>
             <p className="mt-1 font-mono text-4xl font-semibold tracking-tight" data-testid="received">
-              {Math.round(shownReceived).toLocaleString('en-US')} <span className="text-lg text-indigo-100/80">XAF</span>
+              {formatNumber(Math.round(shownReceived))} <span className="text-lg text-indigo-100/80">{langInfo().xaf}</span>
             </p>
             <div className="mt-2 flex flex-wrap items-center justify-between gap-3 font-mono text-sm text-indigo-100/80">
-              <span>{formatEur(preview.net)} after fee</span>
+              <span>{t('transferForm.afterFee', { eur: formatEur(preview.net) })}</span>
               <CostBadge cost={preview.cost} tone="dark" />
             </div>
           </>
         ) : (
           <p className={`mt-1 text-base ${hasInput ? 'text-[#F4C9C4]' : 'text-indigo-100/80'}`}>
-            {hasInput ? preview.error : 'Enter an amount to see what arrives.'}
+            {hasInput ? tError(preview.error) : t('transferForm.hint')}
           </p>
         )}
       </div>
 
-      {error && <p role="alert" className="text-sm font-semibold text-fee">{error}</p>}
+      {error && <p role="alert" className="text-sm font-semibold text-fee">{tError(error)}</p>}
 
       <button type="submit" className="rounded-md bg-indigo-600 px-5 py-3.5 font-semibold text-white transition-colors hover:bg-indigo-800">
-        Save transfer
+        {t('transferForm.save')}
       </button>
 
       {saved && <p role="status" className="text-sm font-semibold text-received">{saved}</p>}

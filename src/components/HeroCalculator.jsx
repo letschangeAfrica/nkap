@@ -4,6 +4,7 @@ import { parseAmount, formatEur, formatXaf } from '../utils/currency'
 import { compareServices } from '../utils/exampleFees'
 import { useAnimatedNumber } from '../hooks/useAnimatedNumber'
 import CostBadge from './CostBadge'
+import { t } from '../i18n'
 
 const QUICK = [50, 100, 200]
 
@@ -19,17 +20,17 @@ function HeroCalculator({ className = '' }) {
   const gain = best && current.valid && best.name !== service ? best.received - current.received : 0
 
   let hint = null
-  if (amount.trim() === '' || !Number.isFinite(value) || value <= 0) hint = 'Enter an amount in euros.'
-  else if (!current.valid) hint = `${service}'s example fee is larger than ${formatEur(value)}.`
+  if (amount.trim() === '' || !Number.isFinite(value) || value <= 0) hint = t('hero.enterAmount')
+  else if (!current.valid) hint = t('hero.feeTooLarge', { service, amount: formatEur(value) })
 
   return (
     <section
-      aria-label="Try it: how much reaches home?"
+      aria-label={t('hero.label')}
       className={`rounded-lg bg-white p-5 text-ink shadow-[0_20px_50px_rgba(10,18,51,0.45)] sm:p-6 ${className}`}
     >
-      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-indigo-600">Try it · how much reaches home?</p>
+      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-indigo-600">{t('hero.eyebrow')}</p>
 
-      <label className="mt-4 block text-sm font-semibold" htmlFor="hero-amount">You send</label>
+      <label className="mt-4 block text-sm font-semibold" htmlFor="hero-amount">{t('hero.youSend')}</label>
       <div className="mt-1.5 flex items-center gap-2">
         <div className="relative flex-1">
           <input
@@ -56,7 +57,7 @@ function HeroCalculator({ className = '' }) {
       </div>
 
       <fieldset className="mt-4">
-        <legend className="text-sm font-semibold">With</legend>
+        <legend className="text-sm font-semibold">{t('hero.with')}</legend>
         <div className="mt-1.5 grid grid-cols-3 gap-1 rounded-md border border-[#B9C0DD] p-1">
           {rows.map((r) => (
             <label
@@ -78,7 +79,7 @@ function HeroCalculator({ className = '' }) {
 
       <div aria-live="polite">
         <div className="flex items-baseline justify-between gap-4">
-          <span className="text-sm text-muted">Family receives</span>
+          <span className="text-sm text-muted">{t('hero.familyReceives')}</span>
           <span data-testid="hero-received" className="font-mono text-2xl font-semibold text-received sm:text-3xl">
             {current.valid ? formatXaf(shown) : '—'}
           </span>
@@ -88,21 +89,21 @@ function HeroCalculator({ className = '' }) {
         ) : (
           <>
             <div className="mt-3 flex items-center justify-between gap-4 text-sm">
-              <span className="text-muted">Fee <span className="font-mono text-fee">{formatEur(current.fee)}</span></span>
+              <span className="text-muted">{t('common.fee')} <span className="font-mono text-fee">{formatEur(current.fee)}</span></span>
               <CostBadge cost={current.cost} />
             </div>
             <p className="mt-3 rounded-md bg-indigo-100/60 px-3 py-2 text-sm">
               {gain > 0
-                ? <>With {best.name}, your family would get <span className="whitespace-nowrap font-mono font-semibold text-received">+{formatXaf(gain)}</span>.</>
-                : 'The cheapest of these three for this amount.'}
+                ? <>{t('hero.betterWith', { service: best.name })} <span className="whitespace-nowrap font-mono font-semibold text-received">+{formatXaf(gain)}</span>.</>
+                : t('hero.cheapest')}
             </p>
           </>
         )}
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-indigo-100 pt-3">
-        <p className="text-xs text-muted">Example fees. Record your real ones in the app.</p>
-        <Link to="/sent-home" className="text-sm font-semibold text-indigo-600">Track my transfers →</Link>
+        <p className="text-xs text-muted">{t('hero.note')}</p>
+        <Link to="/sent-home" className="text-sm font-semibold text-indigo-600">{t('hero.track')}</Link>
       </div>
     </section>
   )

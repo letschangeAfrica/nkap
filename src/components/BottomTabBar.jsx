@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { NAV_LINKS } from './Navbar'
+import { t } from '../i18n'
 
 const icons = {
   '/dashboard': <path d="M3 11 L12 3 L21 11 V21 H3 Z" />,
@@ -12,7 +13,7 @@ const icons = {
 /** Mobile navigation, fixed to the bottom of the screen. */
 function BottomTabBar() {
   return (
-    <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-10 border-t border-indigo-100 bg-white md:hidden">
+    <nav aria-label={t('nav.main')} className="fixed inset-x-0 bottom-0 z-10 border-t border-indigo-100 bg-white lg:hidden">
       <ul className="grid grid-cols-5">
         {NAV_LINKS.map((link) => (
           <li key={link.to}>
@@ -27,7 +28,7 @@ function BottomTabBar() {
               <svg viewBox="0 0 24 24" className="h-5.5 w-5.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 {icons[link.to]}
               </svg>
-              {link.short}
+              {t(`nav.short.${link.key}`)}
             </NavLink>
           </li>
         ))}

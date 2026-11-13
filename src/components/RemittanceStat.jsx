@@ -1,5 +1,6 @@
 import { useInView } from '../hooks/useInView'
 import { useAnimatedNumber } from '../hooks/useAnimatedNumber'
+import { t, formatNumber } from '../i18n'
 
 /*
  * World Bank, Remittance Prices Worldwide, Issue 54 (Q3 2025): average total
@@ -14,9 +15,9 @@ export const RPW = {
 }
 
 const BARS = [
-  { label: 'Sub-Saharan Africa', value: RPW.ssa, tone: 'bg-fee' },
-  { label: 'World average', value: RPW.global, tone: 'bg-indigo-600' },
-  { label: 'UN target for 2030', value: RPW.sdgTarget, tone: 'bg-received' },
+  { key: 'ssa', value: RPW.ssa, tone: 'bg-fee' },
+  { key: 'world', value: RPW.global, tone: 'bg-indigo-600' },
+  { key: 'target', value: RPW.sdgTarget, tone: 'bg-received' },
 ]
 
 /** The one big, sourced number on the landing page. */
@@ -28,23 +29,23 @@ function RemittanceStat() {
     <section ref={ref} aria-labelledby="stat-heading" className="border-y border-indigo-100 bg-cloth">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-4 py-16 md:px-8 md:py-20 lg:grid-cols-2 lg:gap-24">
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-indigo-600">The cost of sending home</p>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-indigo-600">{t('stat.eyebrow')}</p>
           <p id="stat-heading" className="mt-4 font-mono text-7xl font-semibold tracking-tight text-fee md:text-8xl">
-            <span aria-hidden="true">{shown.toFixed(2)}%</span>
-            <span className="sr-only">{RPW.ssa}%</span>
+            <span aria-hidden="true">{formatNumber(shown, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span>
+            <span className="sr-only">{formatNumber(RPW.ssa)}%</span>
           </p>
           <p className="mt-4 max-w-md text-lg">
-            is the average cost of sending $200 to sub-Saharan Africa, the most expensive region in the world to send money to.
+            {t('stat.text')}
           </p>
         </div>
 
         <div>
-          <ul className="flex flex-col gap-5" aria-label="Average cost of sending $200">
+          <ul className="flex flex-col gap-5" aria-label={t('stat.listLabel')}>
             {BARS.map((b) => (
-              <li key={b.label}>
+              <li key={b.key}>
                 <div className="flex justify-between gap-4 text-sm">
-                  <span>{b.label}</span>
-                  <span className="font-mono font-semibold">{b.value.toFixed(2)}%</span>
+                  <span>{t(`stat.bars.${b.key}`)}</span>
+                  <span className="font-mono font-semibold">{formatNumber(b.value, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span>
                 </div>
                 <div className="mt-2 h-2.5 bg-indigo-100">
                   <div
@@ -56,11 +57,11 @@ function RemittanceStat() {
             ))}
           </ul>
           <p className="mt-6 text-sm text-muted">
-            Source:{' '}
+            {t('stat.source')}{' '}
             <a href={RPW.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-indigo-600 underline underline-offset-4">
-              World Bank, Remittance Prices Worldwide, {RPW.period}
+              {t('stat.sourceName', { period: RPW.period })}
             </a>
-            . The UN Sustainable Development Goals aim to bring this cost below 3% by 2030.
+            . {t('stat.sdg')}
           </p>
         </div>
       </div>

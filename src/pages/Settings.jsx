@@ -3,6 +3,8 @@ import { useCommitmentStore } from '../store/useCommitmentStore'
 import { formatXaf, xafToEur, formatEur } from '../utils/currency'
 import { loadDemoData, clearAllData } from '../utils/demoData'
 import TrashIcon from '../components/TrashIcon'
+import { t, tError, langInfo } from '../i18n'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 
 const fieldClass =
   'mt-1.5 w-full rounded-md border border-[#B9C0DD] bg-white px-3.5 py-3 text-base text-ink focus:border-indigo-600'
@@ -29,42 +31,50 @@ function Settings() {
   }
 
   const handleDemo = () => {
-    if (window.confirm('Replace your data with demo data?')) {
+    if (window.confirm(t('settings.confirmDemo'))) {
       loadDemoData()
-      setNotice('Demo data loaded. Open the dashboard to explore it.')
+      setNotice(t('settings.demoLoaded'))
     }
   }
 
   const handleClear = () => {
-    if (window.confirm('Delete all your transactions, transfers and commitments from this device? This cannot be undone.')) {
+    if (window.confirm(t('settings.confirmDelete'))) {
       clearAllData()
-      setNotice('All your data has been deleted from this device.')
+      setNotice(t('settings.deleted'))
     }
   }
 
   return (
     <div className="flex flex-col gap-8">
       <header>
-        <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">Settings</h1>
-        <p className="mt-2 text-muted">Family commitments and your data.</p>
+        <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">{t('nav.settings')}</h1>
+        <p className="mt-2 text-muted">{t('settings.lead')}</p>
       </header>
 
+      <section className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-indigo-100 p-6 md:p-7">
+        <div>
+          <h2 className="font-display text-xl font-semibold">{t('common.language')}</h2>
+          <p className="mt-1 text-sm text-muted">{t('settings.languageText')}</p>
+        </div>
+        <LanguageSwitcher tone="light" />
+      </section>
+
       <section className="rounded-lg border border-indigo-100 p-6 md:p-7">
-        <h2 className="font-display text-xl font-semibold">Family commitments</h2>
-        <p className="mt-1 text-sm text-muted">Recurring support you plan to send every month, like school fees.</p>
+        <h2 className="font-display text-xl font-semibold">{t('settings.commitments')}</h2>
+        <p className="mt-1 text-sm text-muted">{t('settings.commitmentsText')}</p>
 
         <form onSubmit={handleAdd} noValidate className="mt-5 grid grid-cols-1 items-end gap-4 sm:grid-cols-[1fr_12rem_auto]">
           <label className="text-sm font-semibold">
-            Name
-            <input className={fieldClass} type="text" maxLength={60} placeholder="School fees" value={label} onChange={(e) => { setLabel(e.target.value); setError('') }} />
+            {t('settings.name')}
+            <input className={fieldClass} type="text" maxLength={60} placeholder={t('settings.namePlaceholder')} value={label} onChange={(e) => { setLabel(e.target.value); setError('') }} />
           </label>
           <label className="text-sm font-semibold">
-            Per month (XAF)
+            {t('settings.perMonth', { xaf: langInfo().xaf })}
             <input className={`${fieldClass} font-mono`} type="text" inputMode="numeric" placeholder="50000" value={monthlyXaf} onChange={(e) => { setMonthlyXaf(e.target.value); setError('') }} />
           </label>
-          <button type="submit" className="rounded-md bg-indigo-600 px-5 py-3 font-semibold text-white hover:bg-indigo-800">Add</button>
+          <button type="submit" className="rounded-md bg-indigo-600 px-5 py-3 font-semibold text-white hover:bg-indigo-800">{t('settings.add')}</button>
         </form>
-        {error && <p role="alert" className="mt-3 text-sm font-semibold text-fee">{error}</p>}
+        {error && <p role="alert" className="mt-3 text-sm font-semibold text-fee">{tError(error)}</p>}
 
         {commitments.length > 0 && (
           <ul className="mt-6 border-t border-indigo-100">
@@ -76,7 +86,7 @@ function Settings() {
                   <button
                     type="button"
                     onClick={() => removeCommitment(c.id)}
-                    aria-label={`Remove ${c.label}`}
+                    aria-label={t('settings.remove', { name: c.label })}
                     className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted hover:bg-indigo-100 hover:text-fee"
                   >
                     <TrashIcon />
@@ -85,7 +95,7 @@ function Settings() {
               </li>
             ))}
             <li className="flex justify-between gap-4 pt-3 font-mono text-sm">
-              <span className="font-sans text-muted">Total per month</span>
+              <span className="font-sans text-muted">{t('settings.total')}</span>
               <span className="font-semibold">{formatXaf(total)} <span className="text-muted">≈ {formatEur(xafToEur(total))}</span></span>
             </li>
           </ul>
@@ -93,16 +103,16 @@ function Settings() {
       </section>
 
       <section className="rounded-lg border border-indigo-100 p-6 md:p-7">
-        <h2 className="font-display text-xl font-semibold">Your data</h2>
+        <h2 className="font-display text-xl font-semibold">{t('settings.data')}</h2>
         <p className="mt-1 max-w-prose text-sm text-muted">
-          Nkap has no account and no server. Everything you enter is stored only in this browser, on this device.
+          {t('settings.dataText')}
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <button type="button" onClick={handleDemo} className="rounded-md border border-indigo-600 px-4 py-2.5 text-sm font-semibold text-indigo-600 hover:bg-indigo-100">
-            Load demo data
+            {t('settings.loadDemo')}
           </button>
           <button type="button" onClick={handleClear} className="rounded-md border border-fee px-4 py-2.5 text-sm font-semibold text-fee hover:bg-[#F8E7E5]">
-            Delete all my data
+            {t('settings.deleteAll')}
           </button>
         </div>
         {notice && <p role="status" className="mt-4 text-sm font-semibold text-received">{notice}</p>}

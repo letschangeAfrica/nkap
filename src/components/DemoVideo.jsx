@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import mp4 from '../assets/demo-transfer.mp4'
-import poster from '../assets/demo-transfer-poster.webp'
+import mp4En from '../assets/demo-transfer.mp4'
+import mp4Fr from '../assets/demo-transfer-fr.mp4'
+import mp4Wes from '../assets/demo-transfer-wes.mp4'
+import posterEn from '../assets/demo-transfer-poster.webp'
+import posterFr from '../assets/demo-transfer-poster-fr.webp'
+import posterWes from '../assets/demo-transfer-poster-wes.webp'
+import { t, getLang } from '../i18n'
+
+// one recording of the real app per language
+const VIDEOS = { en: [mp4En, posterEn], fr: [mp4Fr, posterFr], wes: [mp4Wes, posterWes] }
 
 const wantsStill = () => {
   if (typeof window === 'undefined') return true
@@ -15,6 +23,7 @@ const wantsStill = () => {
  * stays a still image (with a play button) for reduced motion or Data Saver.
  */
 function DemoVideo({ className = '' }) {
+  const [mp4, poster] = VIDEOS[getLang()] ?? VIDEOS.en
   const ref = useRef(null)
   const [playing, setPlaying] = useState(false)
   const [userPaused, setUserPaused] = useState(() => wantsStill())
@@ -66,7 +75,7 @@ function DemoVideo({ className = '' }) {
           height="760"
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
-          aria-label="Demo: a 100 € transfer with a 1.20 € fee is recorded, Nkap shows 64,809 XAF received at a low 1.2% cost, and the dashboard updates."
+          aria-label={t('demo.label')}
         >
           <source src={mp4} type="video/mp4" />
         </video>
@@ -74,7 +83,7 @@ function DemoVideo({ className = '' }) {
       <button
         type="button"
         onClick={toggle}
-        aria-label={playing ? 'Pause the demo' : 'Play the demo'}
+        aria-label={playing ? t('demo.pause') : t('demo.play')}
         className="absolute -bottom-14 left-1/2 inline-flex -translate-x-1/2 sm:-right-14 sm:bottom-2 sm:left-auto sm:translate-x-0 h-10 w-10 items-center justify-center rounded-full border border-indigo-100 bg-white text-indigo-950 shadow-md hover:bg-indigo-100"
       >
         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">

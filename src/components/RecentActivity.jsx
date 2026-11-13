@@ -2,14 +2,15 @@ import { Link } from 'react-router-dom'
 import { formatEur } from '../utils/currency'
 import { formatDate } from '../utils/dates'
 import CostBadge from './CostBadge'
+import { t } from '../i18n'
 
 /** Latest transactions and transfers, merged and newest first. */
 function RecentActivity({ items }) {
   return (
     <section className="rounded-lg border border-indigo-100">
       <div className="flex items-center justify-between border-b border-indigo-100 px-6 py-4">
-        <h2 className="font-display text-xl font-semibold">Recent activity</h2>
-        <Link to="/transactions" className="text-sm font-semibold text-indigo-600">See all</Link>
+        <h2 className="font-display text-xl font-semibold">{t('recent.title')}</h2>
+        <Link to="/transactions" className="text-sm font-semibold text-indigo-600">{t('recent.seeAll')}</Link>
       </div>
       <ul>
         {items.map((item) => (

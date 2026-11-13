@@ -5,6 +5,7 @@ import { currentMonthKey, formatMonth } from '../utils/dates'
 import { transactionTotals } from '../utils/stats'
 import TransactionForm from '../components/TransactionForm'
 import TransactionList from '../components/TransactionList'
+import { t } from '../i18n'
 
 function Transactions() {
   const transactions = useTransactionStore((state) => state.transactions)
@@ -12,20 +13,20 @@ function Transactions() {
   const totals = useMemo(() => transactionTotals(transactions, month), [transactions, month])
 
   const tiles = [
-    { label: 'Income', value: formatEur(totals.income), tone: 'text-received' },
-    { label: 'Expenses', value: formatEur(totals.expenses), tone: 'text-ink' },
-    { label: 'Balance', value: formatEur(totals.balance), tone: totals.balance < 0 ? 'text-fee' : 'text-ink' },
+    { label: t('totals.income'), value: formatEur(totals.income), tone: 'text-received' },
+    { label: t('totals.expenses'), value: formatEur(totals.expenses), tone: 'text-ink' },
+    { label: t('totals.balance'), value: formatEur(totals.balance), tone: totals.balance < 0 ? 'text-fee' : 'text-ink' },
   ]
 
   return (
     <div className="flex flex-col gap-8">
       <header>
-        <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">Transactions</h1>
-        <p className="mt-2 text-muted">Income and expenses in EUR · {formatMonth(month)}</p>
+        <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">{t('nav.transactions')}</h1>
+        <p className="mt-2 text-muted">{t('transactions.lead', { month: formatMonth(month) })}</p>
       </header>
 
       <section
-        aria-label={`Totals for ${formatMonth(month)}`}
+        aria-label={t('common.totalsFor', { month: formatMonth(month) })}
         className="grid grid-cols-1 divide-y divide-indigo-100 rounded-lg border border-indigo-100 sm:grid-cols-3 sm:divide-x sm:divide-y-0"
       >
         {tiles.map((tile) => (

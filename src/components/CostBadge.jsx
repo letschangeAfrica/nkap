@@ -1,4 +1,5 @@
 import { costLevel } from '../utils/currency'
+import { t, formatNumber } from '../i18n'
 
 const styles = {
   light: { Low: 'border-received text-received', Medium: 'border-indigo-600 text-indigo-600', High: 'border-fee text-fee' },
@@ -12,7 +13,7 @@ function CostBadge({ cost, tone = 'light', showLabel = true }) {
     <span
       className={`inline-block whitespace-nowrap rounded-full border px-2.5 py-0.5 font-mono text-xs font-semibold transition-colors ${styles[tone][level]}`}
     >
-      {cost.toFixed(1)}%{showLabel ? ` · ${level}` : ''}
+      {formatNumber(cost, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%{showLabel ? ` · ${t(`cost.${level}`)}` : ''}
     </span>
   )
 }

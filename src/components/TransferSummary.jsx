@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import { useTransferStore } from '../store/useTransferStore'
 import { formatEur, formatXaf } from '../utils/currency'
-import { currentMonthKey, formatMonth } from '../utils/dates'
+import { currentMonthKey, formatMonth, formatMonthName } from '../utils/dates'
 import { transferTotals, costByService } from '../utils/stats'
 import CostBadge from './CostBadge'
+import { t } from '../i18n'
 
 /** This month's totals plus average cost per service. */
 function TransferSummary() {
@@ -15,24 +16,24 @@ function TransferSummary() {
 
   return (
     <>
-      <section aria-label={`Totals for ${formatMonth(month)}`} className="grid grid-cols-1 divide-y divide-indigo-100 rounded-lg border border-indigo-100 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+      <section aria-label={t('common.totalsFor', { month: formatMonth(month) })} className="grid grid-cols-1 divide-y divide-indigo-100 rounded-lg border border-indigo-100 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         <div className="flex items-baseline justify-between gap-3 p-4 sm:block md:p-5">
-          <p className="text-sm text-muted">Sent in {formatMonth(month).split(' ')[0]}</p>
+          <p className="text-sm text-muted">{t('summary.sentIn', { month: formatMonthName(month) })}</p>
           <p className="font-mono text-lg sm:mt-1.5 font-semibold md:text-2xl">{formatEur(totals.sent)}</p>
         </div>
         <div className="flex items-baseline justify-between gap-3 p-4 sm:block md:p-5">
-          <p className="text-sm text-muted">Received</p>
+          <p className="text-sm text-muted">{t('summary.received')}</p>
           <p className="font-mono text-lg sm:mt-1.5 font-semibold text-received md:text-2xl">{formatXaf(totals.received)}</p>
         </div>
         <div className="flex items-baseline justify-between gap-3 p-4 sm:block md:p-5">
-          <p className="text-sm text-muted">Fees</p>
+          <p className="text-sm text-muted">{t('summary.fees')}</p>
           <p className="font-mono text-lg sm:mt-1.5 font-semibold text-fee md:text-2xl">{formatEur(totals.fees)}</p>
         </div>
       </section>
 
       {services.length > 0 && (
         <section className="rounded-lg border border-indigo-100 p-6">
-          <h2 className="font-display text-xl font-semibold">Average cost by service</h2>
+          <h2 className="font-display text-xl font-semibold">{t('summary.byService')}</h2>
           <ul className="mt-4 flex flex-col gap-3">
             {services.map((s) => (
               <li key={s.service} className="grid grid-cols-[8rem_1fr_auto] items-center gap-4 text-sm">

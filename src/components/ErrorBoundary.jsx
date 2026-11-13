@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { t } from '../i18n'
 
 export const STORAGE_KEYS = ['nkap-transactions', 'nkap-transfers', 'nkap-commitments', 'nkap-rates', 'nkap-welcome-done']
 
@@ -26,17 +27,16 @@ class ErrorBoundary extends Component {
     if (!this.state.error) return this.props.children
     return (
       <main role="alert" className="mx-auto flex max-w-xl flex-col gap-4 px-6 py-16">
-        <h1 className="font-display text-2xl font-bold">Something went wrong reading your saved data.</h1>
+        <h1 className="font-display text-2xl font-bold">{t('errorBoundary.title')}</h1>
         <p className="text-muted">
-          You can reload to try again, or reset the data saved on this device. Resetting deletes your transactions,
-          transfers and commitments.
+          {t('errorBoundary.text')}
         </p>
         <div className="flex flex-wrap gap-3">
           <button type="button" onClick={() => window.location.reload()} className="rounded-md border border-indigo-600 px-4 py-2.5 font-semibold text-indigo-600">
-            Reload
+            {t('errorBoundary.reload')}
           </button>
           <button type="button" onClick={this.reset} className="rounded-md bg-indigo-600 px-4 py-2.5 font-semibold text-white">
-            Reset data on this device
+            {t('errorBoundary.reset')}
           </button>
         </div>
       </main>

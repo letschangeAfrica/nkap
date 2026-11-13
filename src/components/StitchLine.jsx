@@ -1,8 +1,11 @@
+import { formatNumber, langInfo } from '../i18n'
+
 /**
  * Ndop "running stitch" connector between EUR and XAF.
  * Changing `trigger` remounts the line, which replays the stitch animation.
  */
-function StitchLine({ trigger, from = 'EUR', to = '× 655.957 → XAF', dark = false }) {
+function StitchLine({ trigger, from = 'EUR', to, dark = false }) {
+  const label = to ?? `× ${formatNumber(655.957, { maximumFractionDigits: 3 })} → ${langInfo().xaf}`
   return (
     <div className={`flex items-center gap-3 font-mono text-xs ${dark ? 'text-indigo-100/80' : 'text-muted'}`} aria-hidden="true">
       <span>{from}</span>
@@ -21,7 +24,7 @@ function StitchLine({ trigger, from = 'EUR', to = '× 655.957 → XAF', dark = f
           style={{ color: dark ? 'var(--color-cloth)' : 'var(--color-indigo-600)' }}
         />
       </svg>
-      <span>{to}</span>
+      <span>{label}</span>
     </div>
   )
 }
