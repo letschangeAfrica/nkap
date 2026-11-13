@@ -21,9 +21,9 @@ describe('Landing', () => {
     render(<MemoryRouter><Landing /></MemoryRouter>)
     expect(transferResult(100, 1.2)).toMatchObject({ received: 64809, cost: 1.2 })
     expect(screen.getByTestId('hero-received')).toHaveTextContent('64,809 XAF')
-    for (const [fee, shown] of [[1.8, '97,213 XAF'], [6.45, '94,163 XAF'], [14.2, '89,079 XAF']]) {
-      expect(transferResult(150, fee).received.toLocaleString('en-US') + ' XAF').toBe(shown)
-      expect(screen.getByText(shown)).toBeInTheDocument()
+    // "Why Nkap" card uses the same example fees as the hero calculator
+    for (const r of compareServices(150).rows) {
+      expect(screen.getAllByText(`${r.received.toLocaleString('en-US')} XAF`).length).toBeGreaterThan(0)
     }
   })
 })
@@ -58,5 +58,13 @@ describe('Hero calculator', () => {
     await user.type(input, '3')
     await user.click(screen.getByLabelText('Western Union'))
     expect(screen.getByText(/example fee is larger/i)).toBeInTheDocument()
+  })
+})
+
+describe('Reveal', () => {
+  test('content stays visible when IntersectionObserver is unavailable', () => {
+    render(<MemoryRouter><Landing /></MemoryRouter>)
+    expect(document.querySelectorAll('.nk-reveal')).toHaveLength(0)
+    expect(screen.getByText(/two money worlds/i)).toBeVisible()
   })
 })

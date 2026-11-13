@@ -50,3 +50,17 @@
 @media (prefers-reduced-motion: reduce) {
   .nk-grow { animation: none; }
 }
+
+/* Sections fade and lift in on scroll (see components/Reveal.jsx) */
+.nk-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 600ms ease-out, transform 600ms ease-out;
+}
+.nk-reveal.is-shown {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nk-reveal { opacity: 1; transform: none; transition: none; }
+}

@@ -5,6 +5,11 @@ import NdopCloth from '../components/ndop/NdopCloth'
 import NdopBand from '../components/ndop/NdopBand'
 import { Wheel } from '../components/ndop/motifs'
 import HeroCalculator from '../components/HeroCalculator'
+import Reveal from '../components/Reveal'
+import { compareServices } from '../utils/exampleFees'
+import { formatXaf } from '../utils/currency'
+
+const WHY_EXAMPLE = compareServices(150)
 
 const FEATURES = [
   {
@@ -89,43 +94,47 @@ function Landing() {
       <main>
         {/* ---------- how it works ---------- */}
         <section id="how" className="mx-auto max-w-6xl scroll-mt-6 px-4 py-20 md:px-8 md:py-24">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-16">
+          <Reveal className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-16">
             <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">Two money worlds. One clear picture.</h2>
             <p className="text-lg text-muted">
               Bank apps track your spending. Transfer apps track their own transfers. Nkap is the first place that shows both together.
             </p>
-          </div>
+          </Reveal>
           <ol className="mt-12 grid grid-cols-1 border-t border-indigo-100 md:grid-cols-3">
             {FEATURES.map((f, i) => (
-              <li key={f.title} className="border-b border-indigo-100 py-8 md:border-b-0 md:border-r md:px-8 md:first:pl-0 md:last:border-r-0">
+              <Reveal as="li" delay={i * 120} key={f.title} className="border-b border-indigo-100 py-8 md:border-b-0 md:border-r md:px-8 md:first:pl-0 md:last:border-r-0">
                 <svg viewBox="0 0 32 32" className="h-9 w-9 text-indigo-950" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                   {f.icon}
                 </svg>
                 <p className="mt-5 font-mono text-xs text-indigo-600">0{i + 1}</p>
                 <h3 className="mt-2 font-display text-xl font-semibold">{f.title}</h3>
                 <p className="mt-3 text-muted">{f.text}</p>
-              </li>
+              </Reveal>
             ))}
           </ol>
         </section>
 
         {/* ---------- why ---------- */}
         <section id="why" className="mx-auto grid max-w-6xl scroll-mt-6 grid-cols-1 items-center gap-12 px-4 pb-20 md:px-8 md:pb-24 lg:grid-cols-2 lg:gap-24">
-          <div className="relative order-2 h-80 overflow-hidden rounded-lg bg-indigo-100 text-indigo-600/30 sm:h-96 lg:order-1">
+          <Reveal className="relative order-2 h-80 overflow-hidden rounded-lg bg-indigo-100 text-indigo-600/30 sm:h-96 lg:order-1">
             <NdopCloth id="ndop-why" ground="var(--color-indigo-100)" className="absolute inset-0 h-full w-full" />
             <div className="absolute inset-0 flex flex-col justify-end gap-3 p-6 sm:p-8">
               <div className="w-fit rounded-md bg-white p-4 text-ink shadow-sm">
                 <p className="text-xs text-muted">Same 150 € sent home</p>
                 <ul className="mt-2 flex flex-col gap-1.5 font-mono text-sm">
-                  <li className="flex justify-between gap-8"><span>Wise</span><span className="text-received">97,213 XAF</span></li>
-                  <li className="flex justify-between gap-8"><span>Orange Money</span><span>94,163 XAF</span></li>
-                  <li className="flex justify-between gap-8"><span>Western Union</span><span className="text-fee">89,079 XAF</span></li>
+                  {WHY_EXAMPLE.rows.map((r) => {
+                    const worst = Math.min(...WHY_EXAMPLE.rows.map((x) => x.received))
+                    const tone = r.name === WHY_EXAMPLE.best.name ? 'text-received' : r.received === worst ? 'text-fee' : ''
+                    return (
+                      <li key={r.name} className="flex justify-between gap-8"><span>{r.name}</span><span className={tone}>{formatXaf(r.received)}</span></li>
+                    )
+                  })}
                 </ul>
                 <p className="mt-3 border-t border-indigo-100 pt-2 text-xs text-muted">Example fees, for illustration</p>
               </div>
             </div>
-          </div>
-          <div className="order-1 lg:order-2">
+          </Reveal>
+          <Reveal delay={120} className="order-1 lg:order-2">
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-indigo-600">Why Nkap</p>
             <h2 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-4xl">
               Sending money to Africa is expensive. Not knowing how expensive is worse.
@@ -134,13 +143,13 @@ function Landing() {
               The World Bank consistently ranks sub-Saharan Africa as the most expensive region in the world to send money to. Nkap
               turns scattered transfers into one monthly picture, so you can choose the service that leaves more for your family.
             </p>
-          </div>
+          </Reveal>
         </section>
 
         {/* ---------- privacy ---------- */}
         <section id="privacy" className="relative scroll-mt-6 overflow-hidden bg-indigo-950 text-cloth">
           <NdopPattern id="ndop-privacy" className="absolute inset-0 h-full w-full text-indigo-800" opacity={0.8} />
-          <div className="relative mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 px-4 py-16 md:flex-row md:items-center md:px-8">
+          <Reveal className="relative mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 px-4 py-16 md:flex-row md:items-center md:px-8">
             <div>
               <h2 className="font-display text-3xl font-bold">Private by design</h2>
               <p className="mt-3 max-w-xl text-lg text-indigo-100/85">
@@ -150,7 +159,7 @@ function Landing() {
             <Link to="/dashboard" className="rounded-md bg-cloth px-6 py-3 font-semibold text-indigo-950 no-underline hover:bg-indigo-100">
               Start tracking
             </Link>
-          </div>
+          </Reveal>
         </section>
       </main>
 
