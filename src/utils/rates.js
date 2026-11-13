@@ -1,3 +1,4 @@
+import { formatNumber, langInfo, t } from '../i18n'
 import { EUR_TO_XAF } from './currency'
 
 export const RATES_URL = 'https://api.frankfurter.dev/v1/latest'
@@ -37,15 +38,16 @@ export const unitRate = (from, to, liveRates) => convert(1, from, to, liveRates)
 
 export function formatMoney(n, code) {
   const decimals = CURRENCIES.find((c) => c.code === code)?.decimals ?? 2
-  const text = n.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
-  return code === 'EUR' ? `${text} €` : `${text} ${code}`
+  const text = formatNumber(n, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
+  if (code === 'EUR') return `${text} €`
+  return `${text} ${code === 'XAF' ? langInfo().xaf : code}`
 }
 
 /** Show small rates with enough significant digits (1 XAF = 0.001524 EUR). */
 export function formatRate(n) {
-  if (n >= 100) return n.toLocaleString('en-US', { maximumFractionDigits: 3 })
-  if (n >= 1) return n.toLocaleString('en-US', { maximumFractionDigits: 4 })
-  return n.toPrecision(4)
+  if (n >= 100) return formatNumber(n, { maximumFractionDigits: 3 })
+  if (n >= 1) return formatNumber(n, { maximumFractionDigits: 4 })
+  return formatNumber(Number(n.toPrecision(4)), { maximumSignificantDigits: 4 })
 }
 
 /** Keep only the currencies we offer, with finite positive rates. */
@@ -95,3 +97,6 @@ export function writeCachedRates(value) {
     /* storage full or blocked: the live rates still work for this visit */
   }
 }
+
+/** Currency name in the current language. */
+export const currencyName = (code) => t(`currencies.${code}`)

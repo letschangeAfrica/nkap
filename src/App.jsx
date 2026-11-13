@@ -7,10 +7,22 @@ import SentHome from './pages/SentHome'
 import Converter from './pages/Converter'
 import Settings from './pages/Settings'
 import NotFound from './pages/NotFound'
+import { useEffect } from 'react'
+import { t, useLang } from './i18n'
 
 function App() {
+  const lang = useLang()
+
+  // keep <html lang>, the tab title and the description in the chosen language
+  useEffect(() => {
+    document.documentElement.lang = lang
+    document.title = t('meta.title')
+    document.querySelector('meta[name="description"]')?.setAttribute('content', t('meta.description'))
+  }, [lang])
+
   return (
-    <Routes>
+    // keyed by language: every page re-renders with the new texts and number formats
+    <Routes key={lang}>
       {/* Public marketing page, without the app navigation */}
       <Route path="/" element={<Landing />} />
 

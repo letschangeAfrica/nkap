@@ -1,3 +1,5 @@
+import { formatNumber, langInfo } from '../i18n'
+
 // The CFA franc (XAF) is pegged to the euro at a fixed rate.
 export const EUR_TO_XAF = 655.957
 
@@ -57,6 +59,8 @@ export function costLevel(costPercent) {
 }
 
 /** Display helpers */
-export const formatEur = (n) =>
-  `${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
-export const formatXaf = (n) => `${Math.round(n).toLocaleString('en-US')} XAF`
+export const formatEur = (n) => `${formatNumber(n, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
+/** Whole euros, for headline figures: "1,250 €" */
+export const formatEur0 = (n) => `${formatNumber(Math.round(n))} €`
+/** "92,228 XAF" in English, "92 228 FCFA" in French */
+export const formatXaf = (n) => `${formatNumber(Math.round(n))} ${langInfo().xaf}`
