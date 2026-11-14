@@ -329,7 +329,8 @@ const en = {
     text: 'Add Nkap to your home screen. It opens like an app and works without internet; only live exchange rates need a connection.',
     button: 'Install the app',
     done: 'Nkap is installed on this device.',
-    ios: 'On iPhone: open Nkap in Safari, tap Share, then "Add to Home Screen".',
+    installedHere: 'Nkap is installed. Open it from your home screen or app list.',
+    ios: 'On iPhone: open Nkap in Safari, tap Share, then "Add to Home Screen". If Nkap is already on your home screen, open it from there.',
     other: 'Use your browser menu: "Install app" or "Add to Home screen".',
   },
   offline: {

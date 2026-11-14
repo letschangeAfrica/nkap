@@ -14,6 +14,28 @@ export const isIOS = () => typeof navigator !== 'undefined' && /iphone|ipad|ipod
 
 export const canPromptInstall = () => deferredPrompt !== null
 
+/*
+ * Browsers don't tell a web page whether it is installed. We remember the
+ * browser's own "appinstalled" event, so the website stops showing install steps.
+ * If the user uninstalls, the browser offers installation again and the flag is cleared.
+ */
+export const INSTALLED_KEY = 'nkap-installed'
+export function wasInstalled() {
+  try {
+    return localStorage.getItem(INSTALLED_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+function rememberInstalled(installed) {
+  try {
+    if (installed) localStorage.setItem(INSTALLED_KEY, '1')
+    else localStorage.removeItem(INSTALLED_KEY)
+  } catch {
+    /* storage blocked: the panel just shows the generic steps */
+  }
+}
+
 // True once a newer version has taken over while this page was open
 let updateReady = false
 export const isUpdateReady = () => updateReady
@@ -40,10 +62,12 @@ export function initPwa({ register = import.meta.env.PROD } = {}) {
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault() // keep it for our own button instead of the browser's mini bar
     deferredPrompt = e
+    rememberInstalled(false) // offered again: it is not installed any more
     notify()
   })
   window.addEventListener('appinstalled', () => {
     deferredPrompt = null
+    rememberInstalled(true)
     notify()
   })
   if ('serviceWorker' in navigator) watchForUpdates(navigator.serviceWorker)

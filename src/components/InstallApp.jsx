@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { t } from '../i18n'
-import { canPromptInstall, isIOS, isStandalone, promptInstall, subscribeInstall } from '../pwa'
+import { canPromptInstall, isIOS, isStandalone, promptInstall, subscribeInstall, wasInstalled } from '../pwa'
 
 /** Settings: install Nkap on the home screen (button where the browser allows it, steps otherwise). */
 function InstallApp() {
@@ -21,6 +21,8 @@ function InstallApp() {
         {t('install.button')}
       </button>
     )
+  } else if (wasInstalled()) {
+    body = <p className="max-w-prose text-sm font-semibold text-received">✓ {t('install.installedHere')}</p>
   } else body = <p className="max-w-prose text-sm text-muted">{isIOS() ? t('install.ios') : t('install.other')}</p>
 
   return (

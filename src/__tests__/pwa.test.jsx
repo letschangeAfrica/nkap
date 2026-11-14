@@ -78,3 +78,33 @@ describe('offline banner', () => {
     expect(screen.queryByRole('status')).not.toBeInTheDocument()
   })
 })
+
+describe('already installed', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    window.matchMedia = vi.fn(() => ({ matches: false, addEventListener: () => {} }))
+  })
+
+  test('after the browser reports an install, the website says so instead of showing install steps', () => {
+    initPwa({ register: false })
+    act(() => { window.dispatchEvent(new Event('appinstalled')) })
+    render(<InstallApp />)
+    expect(screen.getByTestId('install-action')).toHaveTextContent('Nkap is installed. Open it from your home screen')
+  })
+
+  test('if the browser offers installation again (uninstalled), the install button comes back', () => {
+    localStorage.setItem('nkap-installed', '1')
+    initPwa({ register: false })
+    render(<InstallApp />)
+    const event = new Event('beforeinstallprompt', { cancelable: true })
+    Object.assign(event, { prompt: vi.fn(), userChoice: Promise.resolve({ outcome: 'dismissed' }) })
+    act(() => { window.dispatchEvent(event) })
+    expect(screen.getByRole('button', { name: /install the app/i })).toBeInTheDocument()
+    expect(localStorage.getItem('nkap-installed')).toBeNull()
+  })
+
+  test('the manifest has a fixed id equal to the previous start page', () => {
+    const m = JSON.parse(readFileSync('public/manifest.webmanifest', 'utf8'))
+    expect(m.id).toBe('/dashboard')
+  })
+})

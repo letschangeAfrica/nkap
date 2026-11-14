@@ -343,7 +343,8 @@ const wes = {
     text: 'Put Nkap for ya home screen. E go open like app and e di work without internet; na only live rate need connection.',
     button: 'Put di app',
     done: 'Nkap don enter dis phone.',
-    ios: 'For iPhone: open Nkap for Safari, touch Share, then "Add to Home Screen".',
+    installedHere: 'Nkap don enter. Open am from ya home screen or ya app list.',
+    ios: 'For iPhone: open Nkap for Safari, touch Share, then "Add to Home Screen". If Nkap don already dey for ya home screen, open am from dia.',
     other: 'Use ya browser menu: "Install app" or "Add to Home screen".',
   },
   offline: {

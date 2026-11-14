@@ -2,6 +2,7 @@
   "name": "Nkap · Budget and family support",
   "short_name": "Nkap",
   "description": "Your budget in EUR and your family support in XAF, with every transfer fee made visible.",
+  "id": "/dashboard",
   "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",
