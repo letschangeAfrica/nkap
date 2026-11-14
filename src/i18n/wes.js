@@ -285,6 +285,15 @@ const wes = {
     confirmDelete: 'Delete all ya moni movement, transfer and plan from dis phone? Yu no go fit bring dem back.',
     deleted: 'All ya data don delete from dis phone.',
   },
+  theme: {
+    title: 'How e di look',
+    text: 'System go follow di setting of ya phone or computer.',
+    system: 'System',
+    light: 'Day (light)',
+    dark: 'Night (dark)',
+    toLight: 'Change am to day mode',
+    toDark: 'Change am to night mode',
+  },
   notFound: {
     title: 'We no see dis page',
     text: 'Di page wey yu di find no dey.',

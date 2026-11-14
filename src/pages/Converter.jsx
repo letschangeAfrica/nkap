@@ -8,20 +8,20 @@ import StitchLine from '../components/StitchLine'
 import { t } from '../i18n'
 
 const fieldClass =
-  'mt-1.5 w-full rounded-md border border-[#B9C0DD] bg-white px-3.5 py-3 text-base text-ink focus:border-indigo-600'
+  'mt-1.5 w-full rounded-md border border-field bg-surface px-3.5 py-3 text-base text-ink focus:border-accent'
 const QUICK = [50, 100, 200, 500]
 
 function RateStatus({ status, date, retry }) {
   if (status === 'loading') return <p role="status" className="text-sm text-muted">{t('converter.loading')}</p>
   if (status === 'live') return <p role="status" className="text-sm text-muted">{t('converter.live', { date: formatDate(date) })}</p>
   return (
-    <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-[#E3C9A8] bg-[#FBF4EA] px-4 py-3 text-sm">
+    <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-warn-line bg-warn px-4 py-3 text-sm">
       <p>
         {status === 'cached'
           ? t('converter.cached', { date: formatDate(date) })
           : t('converter.offline')}
       </p>
-      <button type="button" onClick={retry} className="font-semibold text-indigo-600 underline underline-offset-4">{t('converter.retry')}</button>
+      <button type="button" onClick={retry} className="font-semibold text-accent underline underline-offset-4">{t('converter.retry')}</button>
     </div>
   )
 }
@@ -87,7 +87,7 @@ function Converter() {
                 key={q}
                 type="button"
                 onClick={() => setAmount(String(q))}
-                className="rounded-full border border-indigo-100 px-3 py-1 font-mono text-sm hover:border-indigo-600"
+                className="rounded-full border border-indigo-100 px-3 py-1 font-mono text-sm hover:border-accent"
               >
                 {q}
               </button>
@@ -100,7 +100,7 @@ function Converter() {
               type="button"
               onClick={swap}
               aria-label={t('converter.swap')}
-              className="mb-1 inline-flex h-11 w-11 items-center justify-self-center justify-center rounded-md border border-indigo-100 text-indigo-600 hover:bg-indigo-100"
+              className="mb-1 inline-flex h-11 w-11 items-center justify-self-center justify-center rounded-md border border-indigo-100 text-accent hover:bg-indigo-100"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M4 8 H18 L14 4 M20 16 H6 L10 20" />
@@ -115,15 +115,15 @@ function Converter() {
         </section>
 
         <section aria-live="polite" className="flex flex-col gap-4 rounded-lg bg-indigo-950 p-6 text-cloth md:p-7 lg:col-span-5">
-          <p className="text-sm text-indigo-100/80">{valid ? t('converter.is', { amount: formatMoney(value, from) }) : '—'}</p>
+          <p className="text-sm text-mist/80">{valid ? t('converter.is', { amount: formatMoney(value, from) }) : '—'}</p>
           <p data-testid="result" className="break-all font-mono text-3xl font-semibold md:text-4xl">
             {result === null ? '—' : formatMoney(shown, to)}
           </p>
           <StitchLine dark trigger={`${from}${to}${result}`} from={from} to={rate ? `× ${formatRate(rate)} → ${to}` : to} />
           {missing ? (
-            <p className="text-sm text-indigo-100/80">{t('converter.missing', { code: missing })}</p>
+            <p className="text-sm text-mist/80">{t('converter.missing', { code: missing })}</p>
           ) : (
-            <p className="text-sm text-indigo-100/80">
+            <p className="text-sm text-mist/80">
               {pegged ? t('converter.peg') : t('converter.viaEuro', { date: formatDate(date) })}
             </p>
           )}

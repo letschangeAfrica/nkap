@@ -26,9 +26,9 @@ function HeroCalculator({ className = '' }) {
   return (
     <section
       aria-label={t('hero.label')}
-      className={`rounded-lg bg-white p-5 text-ink shadow-[0_20px_50px_rgba(10,18,51,0.45)] sm:p-6 ${className}`}
+      className={`rounded-lg bg-surface p-5 text-ink shadow-[0_20px_50px_rgba(10,18,51,0.45)] sm:p-6 ${className}`}
     >
-      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-indigo-600">{t('hero.eyebrow')}</p>
+      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">{t('hero.eyebrow')}</p>
 
       <label className="mt-4 block text-sm font-semibold" htmlFor="hero-amount">{t('hero.youSend')}</label>
       <div className="mt-1.5 flex items-center gap-2">
@@ -40,7 +40,7 @@ function HeroCalculator({ className = '' }) {
             autoComplete="off"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="w-full rounded-md border border-[#B9C0DD] bg-white py-2.5 pl-3.5 pr-9 font-mono text-lg font-semibold focus:border-indigo-600"
+            className="w-full rounded-md border border-field bg-surface py-2.5 pl-3.5 pr-9 font-mono text-lg font-semibold focus:border-accent"
           />
           <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 font-mono text-muted">€</span>
         </div>
@@ -49,7 +49,7 @@ function HeroCalculator({ className = '' }) {
             key={q}
             type="button"
             onClick={() => setAmount(String(q))}
-            className={`hidden rounded-md border px-2.5 py-2.5 font-mono text-sm sm:block ${String(q) === amount ? 'border-indigo-600 text-indigo-600' : 'border-indigo-100 text-muted hover:border-indigo-600'}`}
+            className={`hidden rounded-md border px-2.5 py-2.5 font-mono text-sm sm:block ${String(q) === amount ? 'border-accent text-accent' : 'border-indigo-100 text-muted hover:border-accent'}`}
           >
             {q}
           </button>
@@ -58,12 +58,12 @@ function HeroCalculator({ className = '' }) {
 
       <fieldset className="mt-4">
         <legend className="text-sm font-semibold">{t('hero.with')}</legend>
-        <div className="mt-1.5 grid grid-cols-3 gap-1 rounded-md border border-[#B9C0DD] p-1">
+        <div className="mt-1.5 grid grid-cols-3 gap-1 rounded-md border border-field p-1">
           {rows.map((r) => (
             <label
               key={r.name}
-              className={`cursor-pointer rounded px-1 py-2 text-center text-xs font-semibold transition-colors has-focus-visible:outline-2 has-focus-visible:outline-indigo-600 sm:text-sm ${
-                service === r.name ? 'bg-indigo-950 text-cloth' : 'text-muted hover:bg-indigo-100'
+              className={`cursor-pointer rounded px-1 py-2 text-center text-xs font-semibold transition-colors has-focus-visible:outline-2 has-focus-visible:outline-accent sm:text-sm ${
+                service === r.name ? 'bg-selected text-on-selected' : 'text-muted hover:bg-indigo-100'
               }`}
             >
               <input type="radio" name="hero-service" value={r.name} checked={service === r.name} onChange={() => setService(r.name)} className="sr-only" />
@@ -103,7 +103,7 @@ function HeroCalculator({ className = '' }) {
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-indigo-100 pt-3">
         <p className="text-xs text-muted">{t('hero.note')}</p>
-        <Link to="/sent-home" className="text-sm font-semibold text-indigo-600">{t('hero.track')}</Link>
+        <Link to="/sent-home" className="text-sm font-semibold text-accent">{t('hero.track')}</Link>
       </div>
     </section>
   )

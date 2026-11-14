@@ -26,10 +26,10 @@ function RemittanceStat() {
   const shown = useAnimatedNumber(inView ? RPW.ssa : 0, 1200, 0)
 
   return (
-    <section ref={ref} aria-labelledby="stat-heading" className="border-y border-indigo-100 bg-cloth">
+    <section ref={ref} aria-labelledby="stat-heading" className="border-y border-indigo-100 bg-sunken">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-4 py-16 md:px-8 md:py-20 lg:grid-cols-2 lg:gap-24">
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-indigo-600">{t('stat.eyebrow')}</p>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">{t('stat.eyebrow')}</p>
           <p id="stat-heading" className="mt-4 font-mono text-7xl font-semibold tracking-tight text-fee md:text-8xl">
             <span aria-hidden="true">{formatNumber(shown, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span>
             <span className="sr-only">{formatNumber(RPW.ssa)}%</span>
@@ -58,7 +58,7 @@ function RemittanceStat() {
           </ul>
           <p className="mt-6 text-sm text-muted">
             {t('stat.source')}{' '}
-            <a href={RPW.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-indigo-600 underline underline-offset-4">
+            <a href={RPW.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-accent underline underline-offset-4">
               {t('stat.sourceName', { period: RPW.period })}
             </a>
             . {t('stat.sdg')}

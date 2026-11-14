@@ -7,7 +7,7 @@ import { formatNumber, langInfo } from '../i18n'
 function StitchLine({ trigger, from = 'EUR', to, dark = false }) {
   const label = to ?? `× ${formatNumber(655.957, { maximumFractionDigits: 3 })} → ${langInfo().xaf}`
   return (
-    <div className={`flex items-center gap-3 font-mono text-xs ${dark ? 'text-indigo-100/80' : 'text-muted'}`} aria-hidden="true">
+    <div className={`flex items-center gap-3 font-mono text-xs ${dark ? 'text-mist/80' : 'text-muted'}`} aria-hidden="true">
       <span>{from}</span>
       <svg className="h-2 flex-1" viewBox="0 0 300 8" preserveAspectRatio="none">
         <line

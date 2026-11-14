@@ -28,7 +28,7 @@ function TransactionList() {
               <div className="flex min-w-0 items-center gap-3">
                 <span
                   className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md border font-mono text-xs font-semibold ${
-                    tx.type === 'income' ? 'border-received/40 text-received' : 'border-indigo-100 text-indigo-950'
+                    tx.type === 'income' ? 'border-received/40 text-received' : 'border-indigo-100 text-ink'
                   }`}
                   aria-hidden="true"
                 >

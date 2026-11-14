@@ -10,7 +10,7 @@ function RecentActivity({ items }) {
     <section className="rounded-lg border border-indigo-100">
       <div className="flex items-center justify-between border-b border-indigo-100 px-6 py-4">
         <h2 className="font-display text-xl font-semibold">{t('recent.title')}</h2>
-        <Link to="/transactions" className="text-sm font-semibold text-indigo-600">{t('recent.seeAll')}</Link>
+        <Link to="/transactions" className="text-sm font-semibold text-accent">{t('recent.seeAll')}</Link>
       </div>
       <ul>
         {items.map((item) => (

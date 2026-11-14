@@ -5,9 +5,10 @@ import { loadDemoData, clearAllData } from '../utils/demoData'
 import TrashIcon from '../components/TrashIcon'
 import { t, tError, langInfo } from '../i18n'
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import ThemeChoice from '../components/ThemeChoice'
 
 const fieldClass =
-  'mt-1.5 w-full rounded-md border border-[#B9C0DD] bg-white px-3.5 py-3 text-base text-ink focus:border-indigo-600'
+  'mt-1.5 w-full rounded-md border border-field bg-surface px-3.5 py-3 text-base text-ink focus:border-accent'
 
 function Settings() {
   const commitments = useCommitmentStore((s) => s.commitments)
@@ -59,6 +60,14 @@ function Settings() {
         <LanguageSwitcher tone="light" />
       </section>
 
+      <section className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-indigo-100 p-6 md:p-7">
+        <div>
+          <h2 className="font-display text-xl font-semibold">{t('theme.title')}</h2>
+          <p className="mt-1 text-sm text-muted">{t('theme.text')}</p>
+        </div>
+        <div className="w-full sm:w-80"><ThemeChoice /></div>
+      </section>
+
       <section className="rounded-lg border border-indigo-100 p-6 md:p-7">
         <h2 className="font-display text-xl font-semibold">{t('settings.commitments')}</h2>
         <p className="mt-1 text-sm text-muted">{t('settings.commitmentsText')}</p>
@@ -108,10 +117,10 @@ function Settings() {
           {t('settings.dataText')}
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <button type="button" onClick={handleDemo} className="rounded-md border border-indigo-600 px-4 py-2.5 text-sm font-semibold text-indigo-600 hover:bg-indigo-100">
+          <button type="button" onClick={handleDemo} className="rounded-md border border-accent px-4 py-2.5 text-sm font-semibold text-accent hover:bg-indigo-100">
             {t('settings.loadDemo')}
           </button>
-          <button type="button" onClick={handleClear} className="rounded-md border border-fee px-4 py-2.5 text-sm font-semibold text-fee hover:bg-[#F8E7E5]">
+          <button type="button" onClick={handleClear} className="rounded-md border border-fee px-4 py-2.5 text-sm font-semibold text-fee hover:bg-fee/10">
             {t('settings.deleteAll')}
           </button>
         </div>

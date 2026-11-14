@@ -7,7 +7,7 @@ function LanguageSwitcher({ tone = 'dark', className = '' }) {
   const styles =
     tone === 'dark'
       ? 'border-white/25 bg-indigo-950 text-cloth hover:border-white/50'
-      : 'border-[#B9C0DD] bg-white text-ink hover:border-indigo-600'
+      : 'border-field bg-surface text-ink hover:border-accent'
   return (
     <label className={`relative inline-flex items-center ${className}`}>
       <span className="sr-only">{t('common.language')}</span>

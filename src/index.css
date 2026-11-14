@@ -2,27 +2,59 @@
 
 /* Nkap design system: Ndop indigo + cloth white (see Part 2 style sheet) */
 @theme {
+  /* brand indigo: always the same, used for the dark brand panels and primary buttons */
   --color-indigo-950: #0A1233;
   --color-indigo-800: #14215A;
   --color-indigo-600: #2B3F94;
-  --color-indigo-100: #E6E9F4;
   --color-cloth: #F4F2EC;
+  --color-mist: #E6E9F4; /* light text on the dark brand panels */
+
+  /* theme-aware tokens: light values here, dark values below */
+  --color-surface: #FFFFFF;
+  --color-sunken: #F4F2EC;
+  --color-indigo-100: #E6E9F4; /* lines, pale panels, hover */
+  --color-hover: #F5F6FB;
+  --color-field: #B9C0DD;
+  --color-accent: #2B3F94; /* links, outlines, focus */
   --color-ink: #0E1430;
   --color-muted: #4B5275;
   --color-received: #1E6B5C;
   --color-fee: #A2322A;
+  --color-warn: #FBF4EA;
+  --color-warn-line: #E3C9A8;
+  --color-selected: #0A1233; /* selected option in toggle groups */
+  --color-on-selected: #F4F2EC;
 
   --font-display: "Instrument Sans", sans-serif;
   --font-sans: "IBM Plex Sans", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
+/* Dark theme: night indigo, like the cloth's dyed ground. Set on <html data-theme="dark">. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-surface: #11183A;
+  --color-sunken: #0C1230;
+  --color-indigo-100: #263163;
+  --color-hover: #19214A;
+  --color-field: #46528C;
+  --color-accent: #A9B5F7;
+  --color-ink: #E9EBF5;
+  --color-muted: #A9B0D0;
+  --color-received: #66CDAF;
+  --color-fee: #F49A91;
+  --color-warn: #2B2414;
+  --color-warn-line: #6E5833;
+  --color-selected: #A9B5F7;
+  --color-on-selected: #0A1233;
+}
+
 @layer base {
   body {
-    @apply bg-white font-sans text-ink antialiased;
+    @apply bg-surface font-sans text-ink antialiased;
   }
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-indigo-600;
+    @apply outline-2 outline-offset-2 outline-accent;
   }
 }
 
@@ -63,4 +95,12 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .nk-reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* Smooth colour change when switching theme (not on first paint) */
+.nk-theme-anim, .nk-theme-anim * {
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nk-theme-anim, .nk-theme-anim * { transition: none !important; }
 }

@@ -9,8 +9,8 @@ function WheelIllustration({ className = 'h-20 w-20' }) {
   return (
     <svg viewBox="0 0 80 80" className={className} aria-hidden="true">
       <circle cx="40" cy="40" r="30" fill="var(--color-indigo-100)" />
-      {dots.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.6" className="fill-indigo-600/40" />)}
-      <g className="text-indigo-600"><Wheel cx={40} cy={40} r={20} sw={2.2} /></g>
+      {dots.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="1.6" className="fill-accent/40" />)}
+      <g className="text-accent"><Wheel cx={40} cy={40} r={20} sw={2.2} /></g>
     </svg>
   )
 }

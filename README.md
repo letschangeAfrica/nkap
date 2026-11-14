@@ -90,6 +90,7 @@ src/
 - The chart has a text summary for screen readers.
 - Text colours meet WCAG AA contrast.
 - Animations (stitch line, number roll, chart bars) are turned off when the user prefers reduced motion.
+- Light and dark themes. **System** (the default) follows the device; Light or Dark can be chosen in the top bar or in Settings. The theme is applied before the first paint, so there is no white flash.
 
 ## Design
 

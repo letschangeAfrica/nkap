@@ -13,7 +13,7 @@ const icons = {
 /** Mobile navigation, fixed to the bottom of the screen. */
 function BottomTabBar() {
   return (
-    <nav aria-label={t('nav.main')} className="fixed inset-x-0 bottom-0 z-10 border-t border-indigo-100 bg-white lg:hidden">
+    <nav aria-label={t('nav.main')} className="fixed inset-x-0 bottom-0 z-10 border-t border-indigo-100 bg-surface lg:hidden">
       <ul className="grid grid-cols-5">
         {NAV_LINKS.map((link) => (
           <li key={link.to}>
@@ -21,7 +21,7 @@ function BottomTabBar() {
               to={link.to}
               className={({ isActive }) =>
                 `flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] no-underline ${
-                  isActive ? 'font-semibold text-indigo-950 shadow-[inset_0_2px_0_currentColor]' : 'text-muted'
+                  isActive ? 'font-semibold text-ink shadow-[inset_0_2px_0_currentColor]' : 'text-muted'
                 }`
               }
             >

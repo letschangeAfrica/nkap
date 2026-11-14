@@ -56,7 +56,7 @@ function TransferHistory() {
               </thead>
               <tbody>
                 {sorted.map((tx) => (
-                  <tr key={tx.id} className="border-t border-indigo-100 transition-colors hover:bg-[#F5F6FB]">
+                  <tr key={tx.id} className="border-t border-indigo-100 transition-colors hover:bg-hover">
                     <td className="whitespace-nowrap py-4 pl-6 pr-2 font-mono">{formatDate(tx.date)}</td>
                     <td className="px-2 py-4"><span className="font-semibold">{tx.recipient}</span><span className="block text-xs text-muted lg:hidden">{tx.service}</span></td>
                     <td className="hidden px-2 py-4 lg:table-cell">{tx.service}</td>

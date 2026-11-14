@@ -283,6 +283,15 @@ const fr = {
     confirmDelete: 'Supprimer toutes vos transactions, transferts et engagements de cet appareil ? Cette action est irréversible.',
     deleted: 'Toutes vos données ont été supprimées de cet appareil.',
   },
+  theme: {
+    title: 'Apparence',
+    text: 'Système suit le réglage de votre téléphone ou ordinateur.',
+    system: 'Système',
+    light: 'Clair',
+    dark: 'Sombre',
+    toLight: 'Passer en mode clair',
+    toDark: 'Passer en mode sombre',
+  },
   notFound: {
     title: 'Page introuvable',
     text: "La page que vous cherchez n'existe pas.",

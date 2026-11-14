@@ -10,7 +10,7 @@ import { formatXaf } from '../utils/currency'
 import { t, tError, formatNumber, langInfo } from '../i18n'
 
 const fieldClass =
-  'mt-1.5 w-full rounded-md border border-[#B9C0DD] bg-white px-3.5 py-3 text-base text-ink focus:border-indigo-600'
+  'mt-1.5 w-full rounded-md border border-field bg-surface px-3.5 py-3 text-base text-ink focus:border-accent'
 
 function TransferForm() {
   const addTransfer = useTransferStore((state) => state.addTransfer)
@@ -105,19 +105,19 @@ function TransferForm() {
       <StitchLine trigger={preview.valid ? preview.received : 'none'} />
 
       <div className="rounded-lg bg-indigo-950 p-5 text-cloth" aria-live="polite">
-        <p className="text-sm text-indigo-100/80">{t('transferForm.receives')}</p>
+        <p className="text-sm text-mist/80">{t('transferForm.receives')}</p>
         {preview.valid ? (
           <>
             <p className="mt-1 font-mono text-4xl font-semibold tracking-tight" data-testid="received">
-              {formatNumber(Math.round(shownReceived))} <span className="text-lg text-indigo-100/80">{langInfo().xaf}</span>
+              {formatNumber(Math.round(shownReceived))} <span className="text-lg text-mist/80">{langInfo().xaf}</span>
             </p>
-            <div className="mt-2 flex flex-wrap items-center justify-between gap-3 font-mono text-sm text-indigo-100/80">
+            <div className="mt-2 flex flex-wrap items-center justify-between gap-3 font-mono text-sm text-mist/80">
               <span>{t('transferForm.afterFee', { eur: formatEur(preview.net) })}</span>
               <CostBadge cost={preview.cost} tone="dark" />
             </div>
           </>
         ) : (
-          <p className={`mt-1 text-base ${hasInput ? 'text-[#F4C9C4]' : 'text-indigo-100/80'}`}>
+          <p className={`mt-1 text-base ${hasInput ? 'text-[#F4C9C4]' : 'text-mist/80'}`}>
             {hasInput ? tError(preview.error) : t('transferForm.hint')}
           </p>
         )}

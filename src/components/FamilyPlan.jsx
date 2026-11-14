@@ -9,7 +9,7 @@ function FamilyPlan({ planned, received, monthName }) {
     return (
       <section className="rounded-lg bg-indigo-950 p-6 text-cloth">
         <h2 className="font-display text-lg font-semibold">{t('familyPlan.title')}</h2>
-        <p className="mt-2 text-sm text-indigo-100/80">{t('familyPlan.empty')}</p>
+        <p className="mt-2 text-sm text-mist/80">{t('familyPlan.empty')}</p>
         <Link to="/settings" className="mt-4 inline-block text-sm font-semibold text-cloth underline underline-offset-4">{t('familyPlan.add')}</Link>
       </section>
     )
@@ -27,9 +27,9 @@ function FamilyPlan({ planned, received, monthName }) {
       </svg>
       <div className="flex justify-between gap-3 font-mono text-sm">
         <span>{formatXaf(received)} / {formatXaf(planned)}</span>
-        <span className="text-indigo-100/80">{pct}%</span>
+        <span className="text-mist/80">{pct}%</span>
       </div>
-      <p className="text-sm text-indigo-100/80">{remaining > 0 ? t('familyPlan.remaining', { xaf: formatXaf(remaining) }) : t('familyPlan.done')}</p>
+      <p className="text-sm text-mist/80">{remaining > 0 ? t('familyPlan.remaining', { xaf: formatXaf(remaining) }) : t('familyPlan.done')}</p>
     </section>
   )
 }

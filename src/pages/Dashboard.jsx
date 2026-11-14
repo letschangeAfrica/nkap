@@ -68,7 +68,7 @@ function Dashboard() {
           <h1 className="mt-1 font-display text-3xl font-bold tracking-tight md:text-4xl first-letter:uppercase">{monthName}</h1>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Link to="/transactions" className="rounded-md border border-indigo-600 px-4 py-2.5 text-sm font-semibold text-indigo-600 transition-colors hover:bg-indigo-100">
+          <Link to="/transactions" className="rounded-md border border-accent px-4 py-2.5 text-sm font-semibold text-accent transition-colors hover:bg-indigo-100">
             {t('dashboard.addExpense')}
           </Link>
           <Link to="/sent-home" className="rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-800">
@@ -86,7 +86,7 @@ function Dashboard() {
             action={
               <div className="mt-2 flex flex-wrap justify-center gap-3">
                 <Link to="/sent-home" className="rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-800">{t('dashboard.recordTransfer')}</Link>
-                <button type="button" onClick={() => loadDemoData()} className="rounded-md border border-indigo-600 px-4 py-2.5 text-sm font-semibold text-indigo-600 hover:bg-indigo-100">
+                <button type="button" onClick={() => loadDemoData()} className="rounded-md border border-accent px-4 py-2.5 text-sm font-semibold text-accent hover:bg-indigo-100">
                   {t('common.exploreDemo')}
                 </button>
               </div>

@@ -32,7 +32,7 @@ class ErrorBoundary extends Component {
           {t('errorBoundary.text')}
         </p>
         <div className="flex flex-wrap gap-3">
-          <button type="button" onClick={() => window.location.reload()} className="rounded-md border border-indigo-600 px-4 py-2.5 font-semibold text-indigo-600">
+          <button type="button" onClick={() => window.location.reload()} className="rounded-md border border-accent px-4 py-2.5 font-semibold text-accent">
             {t('errorBoundary.reload')}
           </button>
           <button type="button" onClick={this.reset} className="rounded-md bg-indigo-600 px-4 py-2.5 font-semibold text-white">

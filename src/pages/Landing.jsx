@@ -12,6 +12,7 @@ import { compareServices } from '../utils/exampleFees'
 import { formatXaf } from '../utils/currency'
 import { t } from '../i18n'
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import ThemeToggle from '../components/ThemeToggle'
 
 const WHY_EXAMPLE = compareServices(150)
 
@@ -32,7 +33,7 @@ const FEATURES = [
 
 function Landing() {
   return (
-    <div className="min-h-screen bg-white text-ink">
+    <div className="min-h-screen bg-surface text-ink">
       {/* ---------- hero ---------- */}
       <div className="relative overflow-hidden bg-indigo-950 text-cloth">
         <header className="relative z-10 border-b border-white/10">
@@ -47,8 +48,11 @@ function Landing() {
                 <li><a href="#why" className="text-cloth/90 no-underline hover:text-cloth">{t('landing.nav.why')}</a></li>
                 <li><a href="#privacy" className="text-cloth/90 no-underline hover:text-cloth">{t('landing.nav.privacy')}</a></li>
               </ul>
-              <LanguageSwitcher />
-              <Link to="/dashboard" className="rounded-md bg-cloth px-4 py-2 text-sm font-semibold text-indigo-950 no-underline hover:bg-indigo-100">
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <LanguageSwitcher />
+              </div>
+              <Link to="/dashboard" className="rounded-md bg-cloth px-4 py-2 text-sm font-semibold text-indigo-950 no-underline hover:bg-mist">
                 {t('landing.openApp')}
               </Link>
             </div>
@@ -63,22 +67,22 @@ function Landing() {
 
         <section className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-4 pb-20 pt-14 md:px-8 lg:grid-cols-[5fr_6fr] lg:pb-24 lg:pt-20">
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-indigo-100/70">{t('landing.eyebrow')}</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-mist/70">{t('landing.eyebrow')}</p>
             <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight md:text-6xl">
               {t('landing.title')}
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-indigo-100/85">
+            <p className="mt-6 max-w-xl text-lg text-mist/85">
               {t('landing.lead')}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/dashboard" className="rounded-md bg-cloth px-6 py-3 font-semibold text-indigo-950 no-underline hover:bg-indigo-100">
+              <Link to="/dashboard" className="rounded-md bg-cloth px-6 py-3 font-semibold text-indigo-950 no-underline hover:bg-mist">
                 {t('landing.start')}
               </Link>
-              <a href="#how" className="rounded-md border border-indigo-100/40 px-6 py-3 font-semibold text-cloth no-underline hover:bg-white/5">
+              <a href="#how" className="rounded-md border border-mist/40 px-6 py-3 font-semibold text-cloth no-underline hover:bg-white/5">
                 {t('landing.seeHow')}
               </a>
             </div>
-            <p className="mt-6 text-sm text-indigo-100/70">{t('landing.trust')}</p>
+            <p className="mt-6 text-sm text-mist/70">{t('landing.trust')}</p>
           </div>
 
           <div className="relative">
@@ -104,24 +108,24 @@ function Landing() {
           <ol className="mt-12 grid grid-cols-1 border-t border-indigo-100 md:grid-cols-3">
             {FEATURES.map((f, i) => (
               <Reveal as="li" delay={i * 120} key={f.key} className="border-b border-indigo-100 py-8 md:border-b-0 md:border-r md:px-8 md:first:pl-0 md:last:border-r-0">
-                <svg viewBox="0 0 32 32" className="h-9 w-9 text-indigo-950" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                <svg viewBox="0 0 32 32" className="h-9 w-9 text-ink" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                   {f.icon}
                 </svg>
-                <p className="mt-5 font-mono text-xs text-indigo-600">0{i + 1}</p>
+                <p className="mt-5 font-mono text-xs text-accent">0{i + 1}</p>
                 <h3 className="mt-2 font-display text-xl font-semibold">{t(`landing.features.${f.key}.title`)}</h3>
                 <p className="mt-3 text-muted">{t(`landing.features.${f.key}.text`, { rate: '655.957' })}</p>
               </Reveal>
             ))}
           </ol>
 
-          <div className="mt-16 grid grid-cols-1 items-center gap-12 rounded-lg bg-cloth px-6 py-12 md:px-12 lg:grid-cols-2">
+          <div className="mt-16 grid grid-cols-1 items-center gap-12 rounded-lg bg-sunken px-6 py-12 md:px-12 lg:grid-cols-2">
             <Reveal>
-              <p className="font-mono text-xs uppercase tracking-[0.2em] text-indigo-600">{t('landing.demo.eyebrow')}</p>
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">{t('landing.demo.eyebrow')}</p>
               <h3 className="mt-3 font-display text-2xl font-bold md:text-3xl">{t('landing.demo.title')}</h3>
               <ol className="mt-6 flex flex-col gap-4">
                 {['record', 'arrives', 'cost', 'month'].map((step) => [t(`landing.demo.steps.${step}.title`), t(`landing.demo.steps.${step}.text`, { xaf: formatXaf(64809) })]).map(([title, text], i) => (
                   <li key={title} className="flex gap-4">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-indigo-600 font-mono text-xs text-indigo-600">{i + 1}</span>
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-accent font-mono text-xs text-accent">{i + 1}</span>
                     <p><span className="font-semibold">{title}.</span> <span className="text-muted">{text}</span></p>
                   </li>
                 ))}
@@ -135,10 +139,10 @@ function Landing() {
 
         {/* ---------- why ---------- */}
         <section id="why" className="mx-auto grid max-w-6xl scroll-mt-6 grid-cols-1 items-center gap-12 px-4 py-20 md:px-8 md:py-24 lg:grid-cols-2 lg:gap-24">
-          <Reveal className="relative order-2 h-80 overflow-hidden rounded-lg bg-indigo-100 text-indigo-600/30 sm:h-96 lg:order-1">
+          <Reveal className="relative order-2 h-80 overflow-hidden rounded-lg bg-indigo-100 text-accent/30 sm:h-96 lg:order-1">
             <NdopCloth id="ndop-why" ground="var(--color-indigo-100)" className="absolute inset-0 h-full w-full" />
             <div className="absolute inset-0 flex flex-col justify-end gap-3 p-6 sm:p-8">
-              <div className="w-fit rounded-md bg-white p-4 text-ink shadow-sm">
+              <div className="w-fit rounded-md bg-surface p-4 text-ink shadow-sm">
                 <p className="text-xs text-muted">{t('landing.why.example')}</p>
                 <ul className="mt-2 flex flex-col gap-1.5 font-mono text-sm">
                   {WHY_EXAMPLE.rows.map((r) => {
@@ -154,7 +158,7 @@ function Landing() {
             </div>
           </Reveal>
           <Reveal delay={120} className="order-1 lg:order-2">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-indigo-600">{t('landing.nav.why')}</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">{t('landing.nav.why')}</p>
             <h2 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-4xl">
               {t('landing.why.title')}
             </h2>
@@ -170,11 +174,11 @@ function Landing() {
           <Reveal className="relative mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 px-4 py-16 md:flex-row md:items-center md:px-8">
             <div>
               <h2 className="font-display text-3xl font-bold">{t('landing.privacy.title')}</h2>
-              <p className="mt-3 max-w-xl text-lg text-indigo-100/85">
+              <p className="mt-3 max-w-xl text-lg text-mist/85">
                 {t('landing.privacy.text')}
               </p>
             </div>
-            <Link to="/dashboard" className="rounded-md bg-cloth px-6 py-3 font-semibold text-indigo-950 no-underline hover:bg-indigo-100">
+            <Link to="/dashboard" className="rounded-md bg-cloth px-6 py-3 font-semibold text-indigo-950 no-underline hover:bg-mist">
               {t('landing.privacy.cta')}
             </Link>
           </Reveal>
@@ -182,7 +186,7 @@ function Landing() {
       </main>
 
       <NdopBand id="nk-band-footer" className="h-4 bg-indigo-950 text-cloth/20" />
-      <footer className="bg-indigo-950 text-sm text-indigo-100/70">
+      <footer className="bg-indigo-950 text-sm text-mist/70">
         <div className="mx-auto flex max-w-6xl flex-col justify-between gap-3 px-4 py-8 md:flex-row md:px-8">
           <p>{t('landing.footer.credit')}</p>
           <p>{t('landing.footer.ndop')}</p>

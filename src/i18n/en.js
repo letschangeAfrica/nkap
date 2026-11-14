@@ -272,6 +272,15 @@ const en = {
     confirmDelete: 'Delete all your transactions, transfers and commitments from this device? This cannot be undone.',
     deleted: 'All your data has been deleted from this device.',
   },
+  theme: {
+    title: 'Appearance',
+    text: 'System follows the setting of your phone or computer.',
+    system: 'System',
+    light: 'Light',
+    dark: 'Dark',
+    toLight: 'Switch to light mode',
+    toDark: 'Switch to dark mode',
+  },
   notFound: {
     title: 'Page not found',
     text: 'The page you are looking for does not exist.',

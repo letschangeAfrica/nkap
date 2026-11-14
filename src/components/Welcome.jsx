@@ -28,13 +28,13 @@ function Welcome({ onDone, onDemo }) {
     <section aria-labelledby="welcome-title" className="overflow-hidden rounded-lg border border-indigo-100">
       <div className="flex items-center justify-between bg-indigo-950 px-6 py-3 text-cloth">
         <p className="font-mono text-xs uppercase tracking-[0.18em]">{t('welcome.title')}</p>
-        <button type="button" onClick={onDone} className="text-sm text-indigo-100/80 underline underline-offset-4 hover:text-cloth">
+        <button type="button" onClick={onDone} className="text-sm text-mist/80 underline underline-offset-4 hover:text-cloth">
           {t('welcome.skip')}
         </button>
       </div>
 
       <div className="flex flex-col items-center gap-4 px-6 py-10 text-center">
-        <svg viewBox="0 0 32 32" className="h-14 w-14 text-indigo-600" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <svg viewBox="0 0 32 32" className="h-14 w-14 text-accent" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
           {current.icon}
         </svg>
         <p className="font-mono text-xs text-muted">{t('welcome.step', { n: step + 1, total: STEPS.length })}</p>
@@ -49,13 +49,13 @@ function Welcome({ onDone, onDemo }) {
 
         <div className="mt-4 flex flex-wrap justify-center gap-3">
           {step > 0 && (
-            <button type="button" onClick={() => setStep(step - 1)} className="rounded-md px-4 py-2.5 text-sm font-semibold text-indigo-600 hover:bg-indigo-100">
+            <button type="button" onClick={() => setStep(step - 1)} className="rounded-md px-4 py-2.5 text-sm font-semibold text-accent hover:bg-indigo-100">
               {t('common.back')}
             </button>
           )}
           {last ? (
             <>
-              <button type="button" onClick={onDemo} className="rounded-md border border-indigo-600 px-4 py-2.5 text-sm font-semibold text-indigo-600 hover:bg-indigo-100">
+              <button type="button" onClick={onDemo} className="rounded-md border border-accent px-4 py-2.5 text-sm font-semibold text-accent hover:bg-indigo-100">
                 {t('common.exploreDemo')}
               </button>
               <Link to="/sent-home" onClick={onDone} className="rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white no-underline hover:bg-indigo-800">

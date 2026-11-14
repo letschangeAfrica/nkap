@@ -2,8 +2,8 @@ import { costLevel } from '../utils/currency'
 import { t, formatNumber } from '../i18n'
 
 const styles = {
-  light: { Low: 'border-received text-received', Medium: 'border-indigo-600 text-indigo-600', High: 'border-fee text-fee' },
-  dark: { Low: 'border-[#8FD3BE] text-[#8FD3BE]', Medium: 'border-indigo-100 text-indigo-100', High: 'border-[#F4A79E] text-[#F4A79E]' },
+  light: { Low: 'border-received text-received', Medium: 'border-accent text-accent', High: 'border-fee text-fee' },
+  dark: { Low: 'border-[#8FD3BE] text-[#8FD3BE]', Medium: 'border-mist text-mist', High: 'border-[#F4A79E] text-[#F4A79E]' },
 }
 
 /** Outlined pill showing a transfer's cost in % and its level (Low / Medium / High). */

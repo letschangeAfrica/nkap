@@ -4,7 +4,7 @@ import { todayISO } from '../utils/dates'
 import { t, tError } from '../i18n'
 
 const fieldClass =
-  'mt-1.5 w-full rounded-md border border-[#B9C0DD] bg-white px-3.5 py-3 text-base text-ink focus:border-indigo-600'
+  'mt-1.5 w-full rounded-md border border-field bg-surface px-3.5 py-3 text-base text-ink focus:border-accent'
 
 function TransactionForm() {
   const addTransaction = useTransactionStore((state) => state.addTransaction)
@@ -44,12 +44,12 @@ function TransactionForm() {
 
       <fieldset>
         <legend className="text-sm font-semibold">{t('txForm.type')}</legend>
-        <div className="mt-1.5 grid grid-cols-2 rounded-md border border-[#B9C0DD] p-1">
+        <div className="mt-1.5 grid grid-cols-2 rounded-md border border-field p-1">
           {['expense', 'income'].map((kind) => (
             <label
               key={kind}
-              className={`cursor-pointer rounded px-3 py-2.5 text-center text-sm font-semibold capitalize transition-colors has-focus-visible:outline-2 has-focus-visible:outline-indigo-600 ${
-                type === kind ? 'bg-indigo-950 text-cloth' : 'text-muted hover:bg-indigo-100'
+              className={`cursor-pointer rounded px-3 py-2.5 text-center text-sm font-semibold capitalize transition-colors has-focus-visible:outline-2 has-focus-visible:outline-accent ${
+                type === kind ? 'bg-selected text-on-selected' : 'text-muted hover:bg-indigo-100'
               }`}
             >
               <input type="radio" name="type" value={kind} checked={type === kind} onChange={() => changeType(kind)} className="sr-only" />

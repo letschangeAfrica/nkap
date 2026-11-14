@@ -3,6 +3,7 @@ import Logo from './Logo'
 import NdopBand from './ndop/NdopBand'
 import { t } from '../i18n'
 import LanguageSwitcher from './LanguageSwitcher'
+import ThemeToggle from './ThemeToggle'
 
 export const NAV_LINKS = [
   { to: '/dashboard', key: 'dashboard' },
@@ -28,7 +29,7 @@ function Navbar() {
                 to={link.to}
                 className={({ isActive }) =>
                   `block px-3 py-2 text-sm no-underline transition-colors ${
-                    isActive ? 'font-semibold text-cloth shadow-[inset_0_-2px_0_currentColor]' : 'text-indigo-100/70 hover:text-cloth'
+                    isActive ? 'font-semibold text-cloth shadow-[inset_0_-2px_0_currentColor]' : 'text-mist/70 hover:text-cloth'
                   }`
                 }
               >
@@ -37,7 +38,10 @@ function Navbar() {
             </li>
           ))}
         </ul>
-        <LanguageSwitcher />
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <LanguageSwitcher />
+        </div>
         </div>
       </nav>
       <NdopBand id="nk-band-nav" className="h-3 text-cloth/20" />
