@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTransferStore } from '../store/useTransferStore'
 import { useCommitmentStore } from '../store/useCommitmentStore'
 import { transferResult, formatEur } from '../utils/currency'
 import { SERVICES } from '../utils/services'
-import { todayISO } from '../utils/dates'
+import { todayISO, formatDate } from '../utils/dates'
+import { recentRecipients } from '../utils/stats'
 import { useAnimatedNumber } from '../hooks/useAnimatedNumber'
 import CostBadge from './CostBadge'
 import StitchLine from './StitchLine'
@@ -20,6 +21,8 @@ const fieldClass =
 function TransferForm({ editing = null, onDone, message = '' }) {
   const addTransfer = useTransferStore((state) => state.addTransfer)
   const updateTransfer = useTransferStore((state) => state.updateTransfer)
+  const transfers = useTransferStore((state) => state.transfers)
+  const recent = useMemo(() => recentRecipients(transfers, 3), [transfers])
 
   const [amount, setAmount] = useState(editing ? String(editing.amount) : '')
   const [fee, setFee] = useState(editing ? String(editing.fee) : '')
@@ -30,6 +33,7 @@ function TransferForm({ editing = null, onDone, message = '' }) {
   const [commitmentId, setCommitmentId] = useState(editing?.commitmentId ?? '')
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(message)
+  const [repeated, setRepeated] = useState('')
   const formRef = useRef(null)
   const amountRef = useRef(null)
 
@@ -42,6 +46,20 @@ function TransferForm({ editing = null, onDone, message = '' }) {
   const hasInput = amount !== '' || fee !== ''
   const preview = transferResult(amount, fee === '' ? 0 : fee)
   const shownReceived = useAnimatedNumber(preview.valid ? preview.received : 0)
+
+  /** "Send again": copy a past transfer into the form, dated today */
+  const repeat = (tx) => {
+    setAmount(String(tx.amount))
+    setFee(String(tx.fee))
+    setService(tx.service)
+    setRecipient(tx.recipient)
+    setCommitmentId(commitments.some((c) => c.id === tx.commitmentId) ? tx.commitmentId : '')
+    setDate(todayISO())
+    setError('')
+    setSaved('')
+    setRepeated(t('transferForm.repeated', { recipient: tx.recipient, date: formatDate(tx.date) }))
+    amountRef.current?.focus()
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -56,6 +74,7 @@ function TransferForm({ editing = null, onDone, message = '' }) {
       return onDone?.(t('transferForm.updated', { xaf: formatXaf(result.transfer.received), recipient: result.transfer.recipient }))
     }
     setError('')
+    setRepeated('')
     setSaved(t('transferForm.saved', { xaf: formatXaf(result.transfer.received), recipient: result.transfer.recipient }))
     setAmount('')
     setFee('')
@@ -74,6 +93,30 @@ function TransferForm({ editing = null, onDone, message = '' }) {
       className={`flex scroll-mt-6 flex-col gap-5 rounded-lg border p-6 md:p-7 ${editing ? 'border-accent' : 'border-indigo-100'}`}
     >
       <h2 className="font-display text-xl font-semibold">{editing ? t('transferForm.editTitle') : t('transferForm.title')}</h2>
+
+      {!editing && recent.length > 0 && (
+        <div>
+          <p className="text-sm font-semibold">{t('transferForm.sendAgain')}</p>
+          <ul className="mt-1.5 flex flex-wrap gap-2">
+            {recent.map((tx) => (
+              <li key={tx.id}>
+                <button
+                  type="button"
+                  onClick={() => repeat(tx)}
+                  aria-label={t('transferForm.sendAgainTo', { recipient: tx.recipient, service: tx.service, amount: formatEur(tx.amount) })}
+                  className="flex items-center gap-2 rounded-full border border-field px-3 py-1.5 text-left text-sm hover:border-accent hover:bg-hover"
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-accent" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M4 12a8 8 0 0 1 14-5.3L20 9M20 4v5h-5M20 12a8 8 0 0 1-14 5.3L4 15M4 20v-5h5" />
+                  </svg>
+                  <span><span className="font-semibold">{tx.recipient}</span> <span className="text-muted">· {tx.service} · {formatEur(tx.amount)}</span></span>
+                </button>
+              </li>
+            ))}
+          </ul>
+          {repeated && <p role="status" className="mt-2 text-sm text-accent">{repeated}</p>}
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-4">
         <label className="text-sm font-semibold">

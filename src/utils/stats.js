@@ -96,3 +96,20 @@ export function commitmentProgress(commitments, transfers, month) {
     sent: rows.reduce((sum, r) => sum + r.sent, 0),
   }
 }
+
+/**
+ * The latest transfer for each distinct recipient + service, newest first:
+ * the ones a user is most likely to send again.
+ */
+export function recentRecipients(transfers, count = 3) {
+  const seen = new Set()
+  const out = []
+  for (const t of sortByDateDesc(transfers)) {
+    const key = `${t.recipient.toLowerCase()}|${t.service}`
+    if (seen.has(key)) continue
+    seen.add(key)
+    out.push(t)
+    if (out.length === count) break
+  }
+  return out
+}
