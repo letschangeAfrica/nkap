@@ -73,4 +73,4 @@ export function shellFiles(fileNames) {
   return fileNames.filter(wanted).map((f) => `/${f}`)
 }
 
-export const STATIC_SHELL = ['/', '/manifest.webmanifest', '/favicon.svg', '/theme-init.js', '/icons/icon-192.png', '/icons/icon-512.png']
+export const STATIC_SHELL = ['/', '/manifest.webmanifest', '/favicon.svg', '/theme-init.js', '/splash.css', '/icons/icon-192.png', '/icons/icon-512.png']

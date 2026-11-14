@@ -11,9 +11,26 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="Nkap" />
+    <link rel="stylesheet" href="/splash.css" />
     <script src="/theme-init.js"></script>
   </head>
   <body>
+    <!-- Launch screen: the Ndop wheel assembles while the app loads (styles in /splash.css, removed by src/splash.js) -->
+    <div id="splash" class="nk-splash" role="status" aria-label="Loading Nkap">
+      <svg class="nk-splash-logo" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="nk-ring" cx="60" cy="60" r="44" pathLength="100" />
+        <g class="nk-spoke nk-s1"><line x1="60" y1="60" x2="60" y2="24" /></g>
+        <g class="nk-spoke nk-s2"><line x1="60" y1="60" x2="60" y2="24" /></g>
+        <g class="nk-spoke nk-s3"><line x1="60" y1="60" x2="60" y2="24" /></g>
+        <g class="nk-spoke nk-s4"><line x1="60" y1="60" x2="60" y2="24" /></g>
+        <g class="nk-spoke nk-s5"><line x1="60" y1="60" x2="60" y2="24" /></g>
+        <g class="nk-spoke nk-s6"><line x1="60" y1="60" x2="60" y2="24" /></g>
+        <g class="nk-spoke nk-s7"><line x1="60" y1="60" x2="60" y2="24" /></g>
+        <g class="nk-spoke nk-s8"><line x1="60" y1="60" x2="60" y2="24" /></g>
+        <circle class="nk-hub" cx="60" cy="60" r="7" />
+      </svg>
+      <p class="nk-splash-word" aria-hidden="true">Nkap</p>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

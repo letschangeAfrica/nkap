@@ -1,0 +1,108 @@
+/*
+ * Nkap launch screen (index.html #splash). Plain CSS from the same origin, so it
+ * works under the strict Content-Security-Policy and before any JavaScript loads.
+ * The Ndop wheel assembles: spokes fly in one by one, the ring's stitches join
+ * into a circle, the centre appears; then it comes apart and turns 45° each round.
+ */
+.nk-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #0A1233;
+  color: #F4F2EC;
+  transition: opacity 350ms ease, visibility 350ms;
+  /* safety net: never stay up if the app fails to start */
+  animation: nk-splash-timeout 0s linear 10s forwards;
+}
+.nk-splash.is-done {
+  opacity: 0;
+  visibility: hidden;
+}
+@keyframes nk-splash-timeout {
+  to { opacity: 0; visibility: hidden; }
+}
+
+.nk-splash-logo {
+  width: 112px;
+  height: 112px;
+  overflow: visible;
+  animation: nk-turn 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes nk-turn {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(45deg); }
+}
+
+/* Ring: running stitches that join into one line, then open again */
+.nk-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 3 9.5;
+  animation: nk-ring 2.4s ease-in-out infinite both;
+}
+@keyframes nk-ring {
+  0% { stroke-dasharray: 3 9.5; opacity: 0.35; }
+  45%, 72% { stroke-dasharray: 100 0; opacity: 1; }
+  100% { stroke-dasharray: 3 9.5; opacity: 0.35; }
+}
+
+/* Spokes: each one flies in along its own direction, one after another */
+.nk-spoke line {
+  stroke: currentColor;
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  animation: nk-spoke 2.4s cubic-bezier(0.3, 0.7, 0.4, 1) infinite both;
+}
+@keyframes nk-spoke {
+  0% { transform: translateY(-30px); opacity: 0; }
+  35%, 72% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-30px); opacity: 0; }
+}
+.nk-s1 { transform: rotate(22.5deg); }
+.nk-s2 { transform: rotate(67.5deg); }
+.nk-s3 { transform: rotate(112.5deg); }
+.nk-s4 { transform: rotate(157.5deg); }
+.nk-s5 { transform: rotate(202.5deg); }
+.nk-s6 { transform: rotate(247.5deg); }
+.nk-s7 { transform: rotate(292.5deg); }
+.nk-s8 { transform: rotate(337.5deg); }
+.nk-spoke { transform-origin: 60px 60px; }
+.nk-s2 line { animation-delay: 50ms; }
+.nk-s3 line { animation-delay: 100ms; }
+.nk-s4 line { animation-delay: 150ms; }
+.nk-s5 line { animation-delay: 200ms; }
+.nk-s6 line { animation-delay: 250ms; }
+.nk-s7 line { animation-delay: 300ms; }
+.nk-s8 line { animation-delay: 350ms; }
+
+/* Centre: appears last, leaves first */
+.nk-hub {
+  fill: currentColor;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: nk-hub 2.4s ease-out infinite both;
+}
+@keyframes nk-hub {
+  0%, 30% { transform: scale(0); }
+  48%, 74% { transform: scale(1); }
+  92%, 100% { transform: scale(0); }
+}
+
+.nk-splash-word {
+  margin: 0;
+  font: 600 22px/1 "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  letter-spacing: 0.04em;
+  opacity: 0.9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nk-splash-logo, .nk-ring, .nk-spoke line, .nk-hub { animation: none; }
+  .nk-ring { stroke-dasharray: none; opacity: 1; }
+}

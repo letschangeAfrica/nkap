@@ -15,6 +15,7 @@ import App from './App.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import { initTheme } from './theme'
 import { initPwa } from './pwa'
+import { hideSplash } from './splash'
 import { syncStoresAcrossTabs } from './store/syncTabs'
 import { installGlobalErrorLogging, reactRootErrorOptions } from './utils/errorLog'
 
@@ -32,3 +33,6 @@ createRoot(document.getElementById('root'), reactRootErrorOptions).render(
     </BrowserRouter>
   </StrictMode>,
 )
+
+// the app is on screen: let the launch screen finish its round and fade out
+requestAnimationFrame(() => hideSplash())
