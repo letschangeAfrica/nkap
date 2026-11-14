@@ -4,10 +4,11 @@ import { formatEur } from '../utils/currency'
 import { formatDate } from '../utils/dates'
 import { sortByDateDesc } from '../utils/stats'
 import TrashIcon from './TrashIcon'
+import PencilIcon from './PencilIcon'
 import EmptyState from './EmptyState'
 import { t } from '../i18n'
 
-function TransactionList() {
+function TransactionList({ onEdit, editingId }) {
   const transactions = useTransactionStore((state) => state.transactions)
   const removeTransaction = useTransactionStore((state) => state.removeTransaction)
   const sorted = useMemo(() => sortByDateDesc(transactions), [transactions])
@@ -24,7 +25,11 @@ function TransactionList() {
       ) : (
         <ul>
           {sorted.map((tx) => (
-            <li key={tx.id} className="flex items-center justify-between gap-4 border-t border-indigo-100 px-5 py-3.5 first:border-t-0 md:px-6">
+            <li
+              key={tx.id}
+              aria-current={tx.id === editingId ? 'true' : undefined}
+              className={`flex items-center justify-between gap-4 border-t border-indigo-100 px-5 py-3.5 first:border-t-0 md:px-6 ${tx.id === editingId ? 'bg-hover' : ''}`}
+            >
               <div className="flex min-w-0 items-center gap-3">
                 <span
                   className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md border font-mono text-xs font-semibold ${
@@ -39,10 +44,20 @@ function TransactionList() {
                   <p className="text-sm text-muted">{t(`categories.${tx.category}`)} · {formatDate(tx.date)}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className={`whitespace-nowrap font-mono font-semibold ${tx.type === 'income' ? 'text-received' : 'text-ink'}`}>
+              <div className="flex items-center gap-1">
+                <span className={`mr-1 whitespace-nowrap font-mono font-semibold ${tx.type === 'income' ? 'text-received' : 'text-ink'}`}>
                   {tx.type === 'income' ? '+' : '−'}{formatEur(tx.amount)}
                 </span>
+                {onEdit && (
+                  <button
+                    type="button"
+                    onClick={() => onEdit(tx)}
+                    aria-label={t('txList.edit', { name: tx.note || t(`categories.${tx.category}`), date: formatDate(tx.date) })}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted transition-colors hover:bg-indigo-100 hover:text-accent"
+                  >
+                    <PencilIcon />
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => handleDelete(tx.id)}

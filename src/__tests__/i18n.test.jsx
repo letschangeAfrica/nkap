@@ -42,6 +42,7 @@ describe('dictionaries', () => {
       'Choose the date of the transfer (today or earlier).', 'Enter a fee of 0 € or more.', 'Enter a monthly amount greater than 0 XAF.',
       'Enter an amount greater than 0 €.', 'Enter who received the money.', 'Give the commitment a name.',
       'The fee cannot be equal to or larger than the amount.',
+      'This entry no longer exists.',
     ]
     expect(messages.filter((m) => !dict.errors[m])).toEqual([])
   })

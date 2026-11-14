@@ -5,8 +5,23 @@ import { formatDate } from '../utils/dates'
 import { sortByDateDesc } from '../utils/stats'
 import CostBadge from './CostBadge'
 import TrashIcon from './TrashIcon'
+import PencilIcon from './PencilIcon'
 import EmptyState from './EmptyState'
 import { t, formatNumber } from '../i18n'
+
+function EditButton({ transfer, onEdit }) {
+  if (!onEdit) return null
+  return (
+    <button
+      type="button"
+      onClick={() => onEdit(transfer)}
+      aria-label={t('history.editTransfer', { recipient: transfer.recipient, date: formatDate(transfer.date) })}
+      className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted transition-colors hover:bg-indigo-100 hover:text-accent"
+    >
+      <PencilIcon />
+    </button>
+  )
+}
 
 function DeleteButton({ transfer, onDelete }) {
   return (
@@ -21,7 +36,7 @@ function DeleteButton({ transfer, onDelete }) {
   )
 }
 
-function TransferHistory() {
+function TransferHistory({ onEdit, editingId }) {
   const transfers = useTransferStore((state) => state.transfers)
   const removeTransfer = useTransferStore((state) => state.removeTransfer)
   const sorted = useMemo(() => sortByDateDesc(transfers), [transfers])
@@ -47,7 +62,6 @@ function TransferHistory() {
                 <tr className="text-xs uppercase tracking-wider text-muted">
                   <th className="py-3 pl-6 pr-2 font-semibold">{t('common.date')}</th>
                   <th className="px-2 py-3 font-semibold">{t('transferForm.recipient')}</th>
-                  <th className="hidden px-2 py-3 font-semibold lg:table-cell">{t('transferForm.service')}</th>
                   <th className="px-2 py-3 text-right font-semibold">{t('history.sent')}</th>
                   <th className="px-2 py-3 text-right font-semibold">{t('summary.received')}</th>
                   <th className="px-2 py-3 text-right font-semibold">{t('history.cost')}</th>
@@ -56,14 +70,13 @@ function TransferHistory() {
               </thead>
               <tbody>
                 {sorted.map((tx) => (
-                  <tr key={tx.id} className="border-t border-indigo-100 transition-colors hover:bg-hover">
+                  <tr key={tx.id} aria-current={tx.id === editingId ? 'true' : undefined} className={`border-t border-indigo-100 transition-colors hover:bg-hover ${tx.id === editingId ? 'bg-hover' : ''}`}>
                     <td className="whitespace-nowrap py-4 pl-6 pr-2 font-mono">{formatDate(tx.date)}</td>
-                    <td className="px-2 py-4"><span className="font-semibold">{tx.recipient}</span><span className="block text-xs text-muted lg:hidden">{tx.service}</span></td>
-                    <td className="hidden px-2 py-4 lg:table-cell">{tx.service}</td>
+                    <td className="px-2 py-4"><span className="font-semibold">{tx.recipient}</span><span className="block text-xs text-muted">{tx.service}</span></td>
                     <td className="whitespace-nowrap px-2 py-4 text-right font-mono">{formatEur(tx.amount)}</td>
                     <td className="whitespace-nowrap px-2 py-4 text-right font-mono font-semibold text-received">{formatNumber(tx.received)}</td>
                     <td className="px-2 py-4 text-right"><CostBadge cost={tx.cost} /></td>
-                    <td className="py-4 pr-4 text-right"><DeleteButton transfer={tx} onDelete={handleDelete} /></td>
+                    <td className="py-4 pr-4 text-right"><span className="inline-flex"><EditButton transfer={tx} onEdit={onEdit} /><DeleteButton transfer={tx} onDelete={handleDelete} /></span></td>
                   </tr>
                 ))}
               </tbody>
@@ -73,7 +86,7 @@ function TransferHistory() {
           {/* Mobile: stacked rows */}
           <ul className="md:hidden">
             {sorted.map((tx) => (
-              <li key={tx.id} className="flex flex-col gap-1.5 border-t border-indigo-100 px-5 py-4 first:border-t-0">
+              <li key={tx.id} aria-current={tx.id === editingId ? 'true' : undefined} className={`flex flex-col gap-1.5 border-t border-indigo-100 px-5 py-4 first:border-t-0 ${tx.id === editingId ? 'bg-hover' : ''}`}>
                 <div className="flex justify-between gap-3">
                   <span className="font-semibold">{tx.recipient}</span>
                   <span className="font-mono font-semibold text-received">{formatXaf(tx.received)}</span>
@@ -82,7 +95,7 @@ function TransferHistory() {
                   <span>{tx.service} · {formatDate(tx.date)} · {formatEur(tx.amount)}</span>
                   <CostBadge cost={tx.cost} />
                 </div>
-                <div className="-mr-2 flex justify-end"><DeleteButton transfer={tx} onDelete={handleDelete} /></div>
+                <div className="-mr-2 flex justify-end"><EditButton transfer={tx} onEdit={onEdit} /><DeleteButton transfer={tx} onDelete={handleDelete} /></div>
               </li>
             ))}
           </ul>

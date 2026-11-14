@@ -5,6 +5,8 @@ const fr = {
     description: 'Nkap : votre budget en euros et le soutien à votre famille en FCFA, avec chaque frais de transfert rendu visible.',
   },
   common: {
+    cancel: 'Annuler',
+    saveChanges: 'Enregistrer les modifications',
     language: 'Langue',
     back: 'Retour',
     next: 'Suivant',
@@ -60,6 +62,7 @@ const fr = {
     'Enter an amount greater than 0 €.': 'Saisissez un montant supérieur à 0 €.',
     'Enter who received the money.': "Indiquez qui a reçu l'argent.",
     'Give the commitment a name.': 'Donnez un nom à cet engagement.',
+    'This entry no longer exists.': "Cette entrée n'existe plus.",
     'The fee cannot be equal to or larger than the amount.': 'Les frais ne peuvent pas être égaux ou supérieurs au montant.',
   },
 
@@ -201,6 +204,8 @@ const fr = {
   transactions: { lead: 'Revenus et dépenses en euros · {month}' },
   txForm: {
     title: 'Nouvelle transaction',
+    editTitle: 'Modifier la transaction',
+    updated: 'Modifications enregistrées.',
     type: 'Type',
     kinds: { expense: 'Dépense', income: 'Revenu' },
     amount: 'Montant (€)',
@@ -216,11 +221,14 @@ const fr = {
     emptyText: 'Ajoutez vos revenus et dépenses pour voir où va votre argent chaque mois.',
     inBadge: 'RE',
     delete: 'Supprimer {name} du {date}',
+    edit: 'Modifier {name} du {date}',
     confirmDelete: 'Supprimer cette transaction ?',
   },
   sentHome: { lead: 'Enregistrez un transfert et voyez exactement ce qui est arrivé.' },
   transferForm: {
     title: 'Nouveau transfert',
+    editTitle: 'Modifier le transfert',
+    updated: 'Modifications enregistrées : {xaf} pour {recipient}.',
     amount: 'Montant envoyé (€)',
     fee: 'Frais (€)',
     service: 'Service',
@@ -242,6 +250,7 @@ const fr = {
     cost: 'Coût',
     actions: 'Actions',
     deleteTransfer: 'Supprimer le transfert à {recipient} du {date}',
+    editTransfer: 'Modifier le transfert à {recipient} du {date}',
     confirmDelete: 'Supprimer ce transfert ?',
   },
   converter: {

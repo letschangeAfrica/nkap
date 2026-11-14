@@ -7,6 +7,8 @@ const wes = {
     description: 'Nkap: ya budget for euro and di moni wey yu send for famili for FCFA, and yu go see every transfer fee.',
   },
   common: {
+    cancel: 'Leave am',
+    saveChanges: 'Save di change',
     language: 'Language',
     back: 'Go back',
     next: 'Next',
@@ -62,6 +64,7 @@ const wes = {
     'Enter an amount greater than 0 €.': 'Put amount wey pass 0 €.',
     'Enter who received the money.': 'Put di person wey receive di moni.',
     'Give the commitment a name.': 'Give dis plan one name.',
+    'This entry no longer exists.': 'Dis one no dey again.',
     'The fee cannot be equal to or larger than the amount.': 'Di fee no fit be same as di amount or pass am.',
   },
 
@@ -203,6 +206,8 @@ const wes = {
   transactions: { lead: 'Moni wey kam and moni wey go, for euro · {month}' },
   txForm: {
     title: 'New moni movement',
+    editTitle: 'Change dis moni movement',
+    updated: 'Di change don save.',
     type: 'Which kind',
     kinds: { expense: 'Moni wey go', income: 'Moni wey kam' },
     amount: 'Amount (€)',
@@ -218,11 +223,14 @@ const wes = {
     emptyText: 'Put ya moni wey kam and di one wey go, for see where ya moni di go every month.',
     inBadge: 'IN',
     delete: 'Delete {name} of {date}',
+    edit: 'Change {name} of {date}',
     confirmDelete: 'Yu want delete dis one?',
   },
   sentHome: { lead: 'Put one transfer and see exactly wetin reach.' },
   transferForm: {
     title: 'New transfer',
+    editTitle: 'Change dis transfer',
+    updated: 'Di change don save: {xaf} for {recipient}.',
     amount: 'Amount wey yu send (€)',
     fee: 'Fee (€)',
     service: 'Service',
@@ -244,6 +252,7 @@ const wes = {
     cost: 'Cost',
     actions: 'Actions',
     deleteTransfer: 'Delete di transfer to {recipient} of {date}',
+    editTransfer: 'Change di transfer to {recipient} of {date}',
     confirmDelete: 'Yu want delete dis transfer?',
   },
   converter: {

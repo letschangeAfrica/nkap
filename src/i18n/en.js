@@ -5,6 +5,8 @@ const en = {
     description: 'Nkap: your budget in EUR and your family support in XAF, with every transfer fee made visible.',
   },
   common: {
+    cancel: 'Cancel',
+    saveChanges: 'Save changes',
     language: 'Language',
     back: 'Back',
     next: 'Next',
@@ -190,6 +192,8 @@ const en = {
   transactions: { lead: 'Income and expenses in EUR · {month}' },
   txForm: {
     title: 'New transaction',
+    editTitle: 'Edit transaction',
+    updated: 'Changes saved.',
     type: 'Type',
     kinds: { expense: 'Expense', income: 'Income' },
     amount: 'Amount (€)',
@@ -205,11 +209,14 @@ const en = {
     emptyText: 'Add your income and expenses to see where your money goes each month.',
     inBadge: 'IN',
     delete: 'Delete {name} on {date}',
+    edit: 'Edit {name} on {date}',
     confirmDelete: 'Delete this transaction?',
   },
   sentHome: { lead: 'Record a transfer and see exactly what arrived.' },
   transferForm: {
     title: 'New transfer',
+    editTitle: 'Edit transfer',
+    updated: 'Changes saved: {xaf} to {recipient}.',
     amount: 'Amount sent (€)',
     fee: 'Fee (€)',
     service: 'Service',
@@ -231,6 +238,7 @@ const en = {
     cost: 'Cost',
     actions: 'Actions',
     deleteTransfer: 'Delete transfer to {recipient} on {date}',
+    editTransfer: 'Edit transfer to {recipient} on {date}',
     confirmDelete: 'Delete this transfer?',
   },
   converter: {

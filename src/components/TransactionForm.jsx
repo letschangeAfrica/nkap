@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTransactionStore, CATEGORIES } from '../store/useTransactionStore'
 import { todayISO } from '../utils/dates'
 import { t, tError } from '../i18n'
@@ -6,16 +6,30 @@ import { t, tError } from '../i18n'
 const fieldClass =
   'mt-1.5 w-full rounded-md border border-field bg-surface px-3.5 py-3 text-base text-ink focus:border-accent'
 
-function TransactionForm() {
+/**
+ * Add a transaction, or edit one when `editing` is set. The parent remounts the
+ * form with a new `key` to switch between the two, so fields start from `editing`.
+ */
+function TransactionForm({ editing = null, onDone, message = '' }) {
   const addTransaction = useTransactionStore((state) => state.addTransaction)
+  const updateTransaction = useTransactionStore((state) => state.updateTransaction)
 
-  const [type, setType] = useState('expense')
-  const [amount, setAmount] = useState('')
-  const [category, setCategory] = useState(CATEGORIES.expense[0])
-  const [date, setDate] = useState(todayISO())
-  const [note, setNote] = useState('')
+  const [type, setType] = useState(editing?.type ?? 'expense')
+  const [amount, setAmount] = useState(editing ? String(editing.amount) : '')
+  const [category, setCategory] = useState(editing?.category ?? CATEGORIES.expense[0])
+  const [date, setDate] = useState(editing?.date ?? todayISO())
+  const [note, setNote] = useState(editing?.note ?? '')
   const [error, setError] = useState('')
-  const [saved, setSaved] = useState('')
+  const [saved, setSaved] = useState(message)
+  const formRef = useRef(null)
+  const amountRef = useRef(null)
+
+  // Bring the form into view and put the cursor in the amount when editing starts
+  useEffect(() => {
+    if (!editing) return
+    formRef.current?.scrollIntoView?.({ block: 'start', behavior: 'smooth' })
+    amountRef.current?.focus({ preventScroll: true })
+  }, [editing])
 
   const changeType = (next) => {
     setType(next)
@@ -26,12 +40,14 @@ function TransactionForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const result = addTransaction({ type, amount, category, date, note })
+    const input = { type, amount, category, date, note }
+    const result = editing ? updateTransaction(editing.id, input) : addTransaction(input)
     if (!result.ok) {
       setError(result.error)
       setSaved('')
       return
     }
+    if (editing) return onDone?.(t('txForm.updated'))
     setError('')
     setSaved(t(`txForm.saved.${type}`))
     setAmount('')
@@ -39,8 +55,13 @@ function TransactionForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5 rounded-lg border border-indigo-100 p-6 md:p-7">
-      <h2 className="font-display text-xl font-semibold">{t('txForm.title')}</h2>
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      noValidate
+      className={`flex scroll-mt-6 flex-col gap-5 rounded-lg border p-6 md:p-7 ${editing ? 'border-accent' : 'border-indigo-100'}`}
+    >
+      <h2 className="font-display text-xl font-semibold">{editing ? t('txForm.editTitle') : t('txForm.title')}</h2>
 
       <fieldset>
         <legend className="text-sm font-semibold">{t('txForm.type')}</legend>
@@ -63,6 +84,7 @@ function TransactionForm() {
         <label className="text-sm font-semibold">
           {t('txForm.amount')}
           <input
+            ref={amountRef}
             className={`${fieldClass} font-mono`}
             type="text"
             inputMode="decimal"
@@ -93,9 +115,16 @@ function TransactionForm() {
 
       {error && <p role="alert" className="text-sm font-semibold text-fee">{tError(error)}</p>}
 
-      <button type="submit" className="rounded-md bg-indigo-600 px-5 py-3.5 font-semibold text-white transition-colors hover:bg-indigo-800">
-        {t(`txForm.save.${type}`)}
-      </button>
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <button type="submit" className="flex-1 rounded-md bg-indigo-600 px-5 py-3.5 font-semibold text-white transition-colors hover:bg-indigo-800">
+          {editing ? t('common.saveChanges') : t(`txForm.save.${type}`)}
+        </button>
+        {editing && (
+          <button type="button" onClick={() => onDone?.('')} className="rounded-md border border-field px-5 py-3.5 font-semibold text-ink hover:bg-hover">
+            {t('common.cancel')}
+          </button>
+        )}
+      </div>
 
       {saved && <p role="status" className="text-sm font-semibold text-received">{saved}</p>}
     </form>

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTransactionStore } from '../store/useTransactionStore'
 import { formatEur } from '../utils/currency'
 import { currentMonthKey, formatMonth } from '../utils/dates'
@@ -11,6 +11,12 @@ function Transactions() {
   const transactions = useTransactionStore((state) => state.transactions)
   const month = currentMonthKey()
   const totals = useMemo(() => transactionTotals(transactions, month), [transactions, month])
+  const [editing, setEditing] = useState(null)
+  const [message, setMessage] = useState('')
+  const finishEdit = (msg) => {
+    setMessage(msg)
+    setEditing(null)
+  }
 
   const tiles = [
     { label: t('totals.income'), value: formatEur(totals.income), tone: 'text-received' },
@@ -38,8 +44,12 @@ function Transactions() {
       </section>
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
-        <div className="lg:sticky lg:top-6 lg:col-span-5"><TransactionForm /></div>
-        <div className="lg:col-span-7"><TransactionList /></div>
+        <div className="lg:sticky lg:top-6 lg:col-span-5">
+          <TransactionForm key={editing?.id ?? `new-${message}`} editing={editing} onDone={finishEdit} message={message} />
+        </div>
+        <div className="lg:col-span-7">
+          <TransactionList onEdit={(tx) => { setMessage(''); setEditing(tx) }} editingId={editing?.id} />
+        </div>
       </div>
     </div>
   )
