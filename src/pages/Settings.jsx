@@ -3,6 +3,7 @@ import { useCommitmentStore } from '../store/useCommitmentStore'
 import { formatXaf, xafToEur, formatEur } from '../utils/currency'
 import { loadDemoData, clearAllData } from '../utils/demoData'
 import TrashIcon from '../components/TrashIcon'
+import DiagnosticReport from '../components/DiagnosticReport'
 import { t, tError, langInfo } from '../i18n'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import ThemeChoice from '../components/ThemeChoice'
@@ -128,6 +129,8 @@ function Settings() {
           </button>
         </div>
         {notice && <p role="status" className="mt-4 text-sm font-semibold text-received">{notice}</p>}
+        <p className="mt-6 max-w-prose text-sm text-muted">{t('diagnostics.help')}</p>
+        <DiagnosticReport className="mt-3" />
       </section>
     </div>
   )

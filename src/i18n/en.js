@@ -293,6 +293,12 @@ const en = {
     reload: 'Reload',
     reset: 'Reset data on this device',
   },
+  diagnostics: {
+    help: 'If something goes wrong, you can copy a short report of recent errors to send to the developer. It never includes your amounts, names or notes, and nothing is sent unless you share it.',
+    copy: 'Copy diagnostic report',
+    copied: 'Report copied. Paste it into your message to the developer.',
+    manual: 'Copying is not available here. Select the report below and copy it:',
+  },
 }
 
 export default en

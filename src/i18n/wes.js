@@ -306,6 +306,12 @@ const wes = {
     reload: 'Reload',
     reset: 'Clean di data for dis phone',
   },
+  diagnostics: {
+    help: 'If something spoil, yu fit copy small report of di last errors for send am to di developer. E no di ever carry ya moni, names or notes, and nothing di go anywhere if yu no share am.',
+    copy: 'Copy di report',
+    copied: 'Report don copy. Paste am for ya message to di developer.',
+    manual: 'Copy no di work for here. Select di report for down and copy am:',
+  },
 }
 
 export default wes

@@ -1,6 +1,9 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import { readFileSync } from 'node:fs'
+
+const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'))
 
 // Anything prefixed VITE_ is copied into the public JS bundle. Refuse names that look like secrets:
 // in a client-only app there is no private place to keep them.
@@ -18,6 +21,8 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), tailwindcss()],
+    // App version for the local error log and diagnostic report (src/utils/errorLog.js)
+    define: { __APP_VERSION__: JSON.stringify(version) },
     test: {
       environment: 'node',
       globals: true,

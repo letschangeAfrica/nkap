@@ -304,6 +304,12 @@ const fr = {
     reload: 'Recharger',
     reset: 'Réinitialiser les données de cet appareil',
   },
+  diagnostics: {
+    help: "En cas de problème, vous pouvez copier un court rapport des erreurs récentes à envoyer au développeur. Il ne contient jamais vos montants, noms ou notes, et rien n'est envoyé sans votre accord.",
+    copy: 'Copier le rapport de diagnostic',
+    copied: 'Rapport copié. Collez-le dans votre message au développeur.',
+    manual: "La copie n'est pas disponible ici. Sélectionnez le rapport ci-dessous et copiez-le :",
+  },
 }
 
 export default fr

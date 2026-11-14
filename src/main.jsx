@@ -15,11 +15,13 @@ import App from './App.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import { initTheme } from './theme'
 import { syncStoresAcrossTabs } from './store/syncTabs'
+import { installGlobalErrorLogging, reactRootErrorOptions } from './utils/errorLog'
 
+installGlobalErrorLogging()
 initTheme()
 syncStoresAcrossTabs()
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById('root'), reactRootErrorOptions).render(
   <StrictMode>
     <BrowserRouter>
       <ErrorBoundary>

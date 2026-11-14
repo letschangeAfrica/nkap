@@ -1,0 +1,52 @@
+name: monitor
+
+# Daily check of the live site. A failed run emails the repository owner,
+# so a missing security header, a dead site or an expiring certificate is noticed.
+# Uses only curl/openssl on the runner: no third-party actions.
+on:
+  schedule:
+    - cron: '17 6 * * *' # every day at 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SITE: https://ismael-nkap.netlify.app
+
+jobs:
+  live-site:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Home page is up and serves the security headers
+        run: |
+          set -euo pipefail
+          headers=$(curl -fsSI --max-time 20 --retry 2 "$SITE/")
+          echo "$headers"
+          for name in content-security-policy x-content-type-options strict-transport-security referrer-policy permissions-policy cross-origin-opener-policy; do
+            echo "$headers" | grep -qi "^$name:" || { echo "::error::Missing security header: $name"; exit 1; }
+          done
+          echo "$headers" | grep -qi "frame-ancestors 'none'" || { echo "::error::CSP no longer contains frame-ancestors 'none'"; exit 1; }
+          echo "$headers" | grep -qi "script-src 'self';" || { echo "::error::CSP script-src changed"; exit 1; }
+          if echo "$headers" | grep -qi '^set-cookie:'; then echo "::error::The site started setting cookies"; exit 1; fi
+
+      - name: App pages load, unknown pages return 404
+        run: |
+          set -euo pipefail
+          status() { curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$SITE$1"; }
+          for page in / /dashboard /transactions /sent-home /converter /settings; do
+            code=$(status "$page"); [ "$code" = 200 ] || { echo "::error::$page returned $code (expected 200)"; exit 1; }
+          done
+          for page in /nope /.env /wp-login.php; do
+            code=$(status "$page"); [ "$code" = 404 ] || { echo "::error::$page returned $code (expected 404)"; exit 1; }
+          done
+
+      - name: TLS certificate is valid for at least 14 more days
+        run: |
+          set -euo pipefail
+          host=${SITE#https://}
+          end=$(echo | openssl s_client -servername "$host" -connect "$host:443" 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+          days=$(( ($(date -d "$end" +%s) - $(date +%s)) / 86400 ))
+          echo "Certificate expires $end ($days days)"
+          [ "$days" -ge 14 ] || { echo "::error::TLS certificate expires in $days days"; exit 1; }

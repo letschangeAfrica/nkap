@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { t } from '../i18n'
+import DiagnosticReport from './DiagnosticReport'
 
 export const STORAGE_KEYS = ['nkap-transactions', 'nkap-transfers', 'nkap-commitments', 'nkap-rates', 'nkap-welcome-done']
 
@@ -31,6 +32,9 @@ class ErrorBoundary extends Component {
         <p className="text-muted">
           {t('errorBoundary.text')}
         </p>
+        {/* Offered before Reset, so the user can share what went wrong first. The log is kept after Reset. */}
+        <p className="text-sm text-muted">{t('diagnostics.help')}</p>
+        <DiagnosticReport />
         <div className="flex flex-wrap gap-3">
           <button type="button" onClick={() => window.location.reload()} className="rounded-md border border-accent px-4 py-2.5 font-semibold text-accent">
             {t('errorBoundary.reload')}

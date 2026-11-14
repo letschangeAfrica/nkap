@@ -1,4 +1,5 @@
 import { todayISO } from './dates'
+import { recordError } from './errorLog'
 
 export const MAX_TEXT = 60
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
@@ -53,7 +54,11 @@ export function readLatest(api) {
  * Build a Zustand `persist` merge that keeps only well-formed items, so bad
  * saved data is dropped instead of crashing the app.
  */
-export const sanitizedMerge = (key, isValid) => (persisted, current) => ({
-  ...current,
-  [key]: Array.isArray(persisted?.[key]) ? persisted[key].filter(isValid) : current[key],
-})
+export const sanitizedMerge = (key, isValid) => (persisted, current) => {
+  if (!Array.isArray(persisted?.[key])) return { ...current }
+  const kept = persisted[key].filter(isValid)
+  const dropped = persisted[key].length - kept.length
+  // Never silent: record how many were dropped (a count only, never the records themselves)
+  if (dropped > 0) recordError(new Error(`${dropped} saved ${key} could not be read and were skipped`), 'rehydrate')
+  return { ...current, [key]: kept }
+}

@@ -1,1 +1,10 @@
-/*    /index.html   200
+# App pages: serve the single-page app (Netlify serves real files like /assets/* before these rules).
+# Keep in sync with the <Route path> list in src/App.jsx (checked by src/__tests__/redirects.test.js).
+/dashboard      /index.html   200
+/transactions   /index.html   200
+/sent-home      /index.html   200
+/converter      /index.html   200
+/settings       /index.html   200
+
+# Anything else still shows the app's "Page not found" screen, but with a real 404 status.
+/*              /index.html   404

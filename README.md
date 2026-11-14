@@ -82,7 +82,10 @@ src/
 - The only network request is to the Frankfurter API for exchange rates. It sends no personal data. Fonts are self-hosted (no Google Fonts requests).
 - A strict Content-Security-Policy and other security headers are set in `public/_headers`.
 - Saved data is checked when it is loaded; if it still can't be displayed, an error screen offers to reset it.
-- **Settings → Delete all my data** erases everything after a confirmation.
+- Errors are kept in a small log **on the device only** (last 20; error type, sanitized message, page and app version, never amounts, names or notes). Nothing is sent: the user can choose **Copy diagnostic report** in Settings or on the error screen to share it.
+- Open tabs stay in sync, so a save in one tab never overwrites another, and "Delete all my data" can't be undone by a tab left open.
+- **Settings → Delete all my data** erases everything after a confirmation, the error log included.
+- Unknown URLs return a real 404 (`public/_redirects`). A daily GitHub Actions job (`.github/workflows/monitor.yml`) checks the live site's security headers, status codes and TLS certificate, and fails (emailing the owner) if anything regresses.
 - User input is validated (amounts > 0, fee smaller than the amount) and rendered by React, which escapes it. The app never uses `dangerouslySetInnerHTML`.
 - Limit: data in `localStorage` is not encrypted. Anyone with access to the unlocked device and browser can read it. Don't use Nkap on a shared computer.
 
