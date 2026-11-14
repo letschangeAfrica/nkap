@@ -29,7 +29,8 @@ const isStr = (s) => typeof s === 'string'
  */
 export const isTransfer = (t) =>
   !!t && isStr(t.id) && isRealDate(t.date) && isStr(t.recipient) && isStr(t.service) &&
-  isPos(t.amount) && isNum(t.fee) && t.fee >= 0 && t.fee < t.amount && isNum(t.received) && isNum(t.cost)
+  isPos(t.amount) && isNum(t.fee) && t.fee >= 0 && t.fee < t.amount && isNum(t.received) && isNum(t.cost) &&
+  (t.commitmentId == null || isStr(t.commitmentId))
 
 export const isTransaction = (t) =>
   !!t && isStr(t.id) && isRealDate(t.date) && (t.type === 'income' || t.type === 'expense') &&

@@ -75,3 +75,24 @@ export function potentialSavings(transfers, month) {
     .reduce((sum, t) => sum + Math.max(0, t.fee - (t.amount * cheapest.cost) / 100), 0)
   return { cheapest, savings: round2(savings) }
 }
+
+/**
+ * This month's XAF received per family commitment. Transfers not linked to an
+ * existing commitment count as "other" support.
+ * Returns { rows: [{ id, label, planned, sent, remaining, over }], other, planned, sent }
+ */
+export function commitmentProgress(commitments, transfers, month) {
+  const thisMonth = transfers.filter((t) => monthKey(t.date) === month)
+  const ids = new Set(commitments.map((c) => c.id))
+  const rows = commitments.map((c) => {
+    const sent = thisMonth.filter((t) => t.commitmentId === c.id).reduce((sum, t) => sum + t.received, 0)
+    return { id: c.id, label: c.label, planned: c.monthlyXaf, sent, remaining: Math.max(0, c.monthlyXaf - sent), over: Math.max(0, sent - c.monthlyXaf) }
+  })
+  const other = thisMonth.filter((t) => !ids.has(t.commitmentId)).reduce((sum, t) => sum + t.received, 0)
+  return {
+    rows,
+    other,
+    planned: rows.reduce((sum, r) => sum + r.planned, 0),
+    sent: rows.reduce((sum, r) => sum + r.sent, 0),
+  }
+}

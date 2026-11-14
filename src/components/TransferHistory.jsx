@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useTransferStore } from '../store/useTransferStore'
+import { useCommitmentStore } from '../store/useCommitmentStore'
 import { formatEur, formatXaf } from '../utils/currency'
 import { formatDate } from '../utils/dates'
 import { sortByDateDesc } from '../utils/stats'
@@ -40,6 +41,8 @@ function TransferHistory({ onEdit, editingId }) {
   const transfers = useTransferStore((state) => state.transfers)
   const removeTransfer = useTransferStore((state) => state.removeTransfer)
   const sorted = useMemo(() => sortByDateDesc(transfers), [transfers])
+  const commitments = useCommitmentStore((state) => state.commitments)
+  const planLabel = (tx) => commitments.find((c) => c.id === tx.commitmentId)?.label
 
   const handleDelete = (id) => {
     if (window.confirm(t('history.confirmDelete'))) removeTransfer(id)
@@ -72,7 +75,7 @@ function TransferHistory({ onEdit, editingId }) {
                 {sorted.map((tx) => (
                   <tr key={tx.id} aria-current={tx.id === editingId ? 'true' : undefined} className={`border-t border-indigo-100 transition-colors hover:bg-hover ${tx.id === editingId ? 'bg-hover' : ''}`}>
                     <td className="whitespace-nowrap py-4 pl-6 pr-2 font-mono">{formatDate(tx.date)}</td>
-                    <td className="px-2 py-4"><span className="font-semibold">{tx.recipient}</span><span className="block text-xs text-muted">{tx.service}</span></td>
+                    <td className="px-2 py-4"><span className="font-semibold">{tx.recipient}</span><span className="block text-xs text-muted">{tx.service}{planLabel(tx) && <> · <span className="text-accent">{planLabel(tx)}</span></>}</span></td>
                     <td className="whitespace-nowrap px-2 py-4 text-right font-mono">{formatEur(tx.amount)}</td>
                     <td className="whitespace-nowrap px-2 py-4 text-right font-mono font-semibold text-received">{formatNumber(tx.received)}</td>
                     <td className="px-2 py-4 text-right"><CostBadge cost={tx.cost} /></td>
@@ -92,7 +95,7 @@ function TransferHistory({ onEdit, editingId }) {
                   <span className="font-mono font-semibold text-received">{formatXaf(tx.received)}</span>
                 </div>
                 <div className="flex items-center justify-between gap-3 text-sm text-muted">
-                  <span>{tx.service} · {formatDate(tx.date)} · {formatEur(tx.amount)}</span>
+                  <span>{tx.service} · {formatDate(tx.date)} · {formatEur(tx.amount)}{planLabel(tx) && <> · <span className="text-accent">{planLabel(tx)}</span></>}</span>
                   <CostBadge cost={tx.cost} />
                 </div>
                 <div className="-mr-2 flex justify-end"><EditButton transfer={tx} onEdit={onEdit} /><DeleteButton transfer={tx} onDelete={handleDelete} /></div>

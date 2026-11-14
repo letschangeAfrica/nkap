@@ -32,12 +32,18 @@ export function buildDemoData(now = new Date()) {
   const id = () => `demo-${(n += 1)}`
   const transactions = []
   const transfers = []
+  // Two family commitments; Maman's support goes over plan this month, school fees are still to send
+  const commitments = [
+    { id: id(), label: t('demo.mumSupport'), monthlyXaf: 60000 },
+    { id: id(), label: t('demo.school'), monthlyXaf: 50000 },
+  ]
+  const planFor = { [t('demo.mum')]: commitments[0].id, [t('demo.school')]: commitments[1].id }
 
   const tx = (type, amount, category, date, note = '') =>
     transactions.push({ id: id(), createdAt: n, type, amount, category, date, note })
   const tr = ({ amount, fee, service, recipient }, date) => {
     const r = transferResult(amount, fee)
-    transfers.push({ id: id(), createdAt: n, amount, fee, service, recipient, date, received: r.received, cost: r.cost })
+    transfers.push({ id: id(), createdAt: n, amount, fee, service, recipient, date, received: r.received, cost: r.cost, commitmentId: planFor[recipient] ?? null })
   }
 
   months.slice(0, 5).forEach((key, i) => {
@@ -61,7 +67,6 @@ export function buildDemoData(now = new Date()) {
   tr({ amount: 50, fee: 8.2, service: 'Western Union', recipient: t('demo.dad') }, day(current, 3))
   tr({ amount: 100, fee: 1.2, service: 'Wise', recipient: t('demo.mum') }, day(current, 12))
 
-  const commitments = [{ id: id(), label: t('demo.commitment'), monthlyXaf: 100000 }]
   return { transactions, transfers, commitments }
 }
 

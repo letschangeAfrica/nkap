@@ -2,21 +2,27 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { parseAmount, transferResult } from '../utils/currency'
 import { SERVICES } from '../utils/services'
+import { useCommitmentStore } from './useCommitmentStore'
 import { validDate, cleanText, isTransfer, sanitizedMerge, readLatest } from '../utils/validate'
 
 const MISSING = 'This entry no longer exists.'
 
 /** Validate form fields; returns { ok: true, fields } or { ok: false, error }. */
-function checkTransfer({ amount, fee, service, recipient, date }) {
+function checkTransfer({ amount, fee, service, recipient, date, commitmentId = null }) {
   const result = transferResult(amount, fee)
   if (!result.valid) return { ok: false, error: result.error }
   const name = cleanText(recipient)
   if (!name) return { ok: false, error: 'Enter who received the money.' }
   if (!SERVICES.includes(service)) return { ok: false, error: 'Choose a service.' }
   if (!validDate(date)) return { ok: false, error: 'Choose the date of the transfer (today or earlier).' }
+  // A transfer can count towards one family commitment; an unknown id is dropped, never stored
+  const linked = typeof commitmentId === 'string' && useCommitmentStore.getState().commitments.some((c) => c.id === commitmentId)
   return {
     ok: true,
-    fields: { amount: parseAmount(amount), fee: parseAmount(fee), service, recipient: name, date, received: result.received, cost: result.cost },
+    fields: {
+      amount: parseAmount(amount), fee: parseAmount(fee), service, recipient: name, date,
+      received: result.received, cost: result.cost, commitmentId: linked ? commitmentId : null,
+    },
   }
 }
 

@@ -5,7 +5,7 @@ import { useTransferStore } from '../store/useTransferStore'
 import { useCommitmentStore } from '../store/useCommitmentStore'
 import { formatEur, formatEur0 as eur0, formatXaf } from '../utils/currency'
 import { currentMonthKey, formatMonth, formatMonthName } from '../utils/dates'
-import { transactionTotals, transferTotals, monthlySeries, potentialSavings, sortByDateDesc } from '../utils/stats'
+import { transactionTotals, transferTotals, monthlySeries, potentialSavings, sortByDateDesc, commitmentProgress } from '../utils/stats'
 import { loadDemoData } from '../utils/demoData'
 import KpiTile from '../components/KpiTile'
 import MonthlyChart from '../components/MonthlyChart'
@@ -32,7 +32,7 @@ function Dashboard() {
   const home = useMemo(() => transferTotals(transfers, month), [transfers, month])
   const series = useMemo(() => monthlySeries(transactions, transfers, 6), [transactions, transfers])
   const { cheapest, savings } = useMemo(() => potentialSavings(transfers, month), [transfers, month])
-  const planned = commitments.reduce((sum, c) => sum + c.monthlyXaf, 0)
+  const progress = useMemo(() => commitmentProgress(commitments, transfers, month), [commitments, transfers, month])
 
   const recent = useMemo(() => {
     const items = [
@@ -59,7 +59,7 @@ function Dashboard() {
     setWelcomeDone()
     setShowWelcome(false)
   }
-  const insights = useMemo(() => buildInsights({ transactions, transfers, month }), [transactions, transfers, month])
+  const insights = useMemo(() => buildInsights({ transactions, transfers, month, commitments }), [transactions, transfers, month, commitments])
 
   return (
     <div className="flex flex-col gap-8">
@@ -124,7 +124,7 @@ function Dashboard() {
           <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
             <div className="lg:col-span-8"><MonthlyChart series={series} /></div>
             <aside className="flex flex-col gap-6 lg:col-span-4">
-              <FamilyPlan planned={planned} received={home.received} monthName={formatMonthName(month)} />
+              <FamilyPlan progress={progress} monthName={formatMonthName(month)} />
               {cheapest && (
                 <section className="flex flex-col gap-2 rounded-lg border border-indigo-100 p-6">
                   <h2 className="font-display text-lg font-semibold">{t('dashboard.cheapest')}</h2>

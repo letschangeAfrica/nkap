@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTransferStore } from '../store/useTransferStore'
+import { useCommitmentStore } from '../store/useCommitmentStore'
 import { transferResult, formatEur } from '../utils/currency'
 import { SERVICES } from '../utils/services'
 import { todayISO } from '../utils/dates'
@@ -25,6 +26,8 @@ function TransferForm({ editing = null, onDone, message = '' }) {
   const [service, setService] = useState(editing?.service ?? SERVICES[0])
   const [recipient, setRecipient] = useState(editing?.recipient ?? '')
   const [date, setDate] = useState(editing?.date ?? todayISO())
+  const commitments = useCommitmentStore((state) => state.commitments)
+  const [commitmentId, setCommitmentId] = useState(editing?.commitmentId ?? '')
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(message)
   const formRef = useRef(null)
@@ -42,7 +45,7 @@ function TransferForm({ editing = null, onDone, message = '' }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const input = { amount, fee: fee === '' ? 0 : fee, service, recipient, date }
+    const input = { amount, fee: fee === '' ? 0 : fee, service, recipient, date, commitmentId: commitmentId || null }
     const result = editing ? updateTransfer(editing.id, input) : addTransfer(input)
     if (!result.ok) {
       setError(result.error)
@@ -124,6 +127,18 @@ function TransferForm({ editing = null, onDone, message = '' }) {
           <input className={`${fieldClass} font-mono`} type="date" value={date} max={todayISO()} onChange={(e) => setDate(e.target.value)} />
         </label>
       </div>
+
+      {commitments.length > 0 && (
+        <label className="text-sm font-semibold">
+          {t('transferForm.for')} <span className="font-normal text-muted">{t('common.optional')}</span>
+          <select className={fieldClass} value={commitmentId} onChange={(e) => setCommitmentId(e.target.value)}>
+            <option value="">{t('transferForm.noCommitment')}</option>
+            {commitments.map((c) => (
+              <option key={c.id} value={c.id}>{c.label}</option>
+            ))}
+          </select>
+        </label>
+      )}
 
       <StitchLine trigger={preview.valid ? preview.received : 'none'} />
 
