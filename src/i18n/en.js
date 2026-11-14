@@ -283,6 +283,7 @@ const en = {
     perMonth: 'Per month ({xaf})',
     add: 'Add',
     remove: 'Remove {name}',
+    confirmRemove: 'Remove the commitment "{name}"? Transfers linked to it will count as other support.',
     total: 'Total per month',
     data: 'Your data',
     dataText: 'Nkap has no account and no server. Everything you enter is stored only in this browser, on this device.',
@@ -333,6 +334,11 @@ const en = {
   },
   offline: {
     banner: "You're offline. Everything still works, except live exchange rates.",
+  },
+  update: {
+    ready: 'A new version of Nkap is ready.',
+    reload: 'Reload',
+    later: 'Later',
   },
   notFound: {
     title: 'Page not found',

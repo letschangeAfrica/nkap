@@ -14,6 +14,11 @@ export const isIOS = () => typeof navigator !== 'undefined' && /iphone|ipad|ipod
 
 export const canPromptInstall = () => deferredPrompt !== null
 
+// True once a newer version has taken over while this page was open
+let updateReady = false
+export const isUpdateReady = () => updateReady
+export const UPDATE_CHECK_MS = 60 * 60 * 1000
+
 export function subscribeInstall(fn) {
   listeners.add(fn)
   return () => listeners.delete(fn)
@@ -41,9 +46,34 @@ export function initPwa({ register = import.meta.env.PROD } = {}) {
     deferredPrompt = null
     notify()
   })
+  if ('serviceWorker' in navigator) watchForUpdates(navigator.serviceWorker)
   if (register && 'serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch(() => { /* offline support is optional */ })
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((reg) => {
+          // An app left open for days still hears about new versions
+          setInterval(() => {
+            if (document.visibilityState === 'visible') reg.update().catch(() => {})
+          }, UPDATE_CHECK_MS)
+        })
+        .catch(() => { /* offline support is optional */ })
     })
   }
+}
+
+/**
+ * When a new service worker takes control of a page that already had one, the
+ * code running in this tab is the old version: offer a reload.
+ * (The very first install also changes the controller, but there was no old version then.)
+ */
+export function watchForUpdates(container) {
+  let hadController = !!container.controller
+  container.addEventListener('controllerchange', () => {
+    if (hadController && !updateReady) {
+      updateReady = true
+      notify()
+    }
+    hadController = true
+  })
 }

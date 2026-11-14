@@ -125,6 +125,11 @@ describe('Settings', () => {
     renderPage(<Settings />)
     expect(screen.getByText(/^total/i).parentElement).toHaveTextContent('80,000 XAF')
 
+    // asks first; cancelling keeps it
+    const confirm = vi.spyOn(window, 'confirm').mockReturnValueOnce(false).mockReturnValueOnce(true)
+    await user.click(screen.getByRole('button', { name: 'Remove School' }))
+    expect(confirm).toHaveBeenCalledWith(expect.stringContaining('School'))
+    expect(screen.getByText('School')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Remove School' }))
 
     expect(screen.queryByText('School')).not.toBeInTheDocument()

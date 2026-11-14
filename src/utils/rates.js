@@ -1,4 +1,5 @@
 import { formatNumber, langInfo, t } from '../i18n'
+import { isRealDate } from './validate'
 import { EUR_TO_XAF } from './currency'
 
 export const RATES_URL = 'https://api.frankfurter.dev/v1/latest'
@@ -64,6 +65,12 @@ function sanitizeRates(raw) {
  * Fetch today's ECB rates (per 1 EUR) from Frankfurter. Throws on network
  * errors, timeouts, bad status codes and unexpected responses.
  */
+export const MAX_RATES_BYTES = 16 * 1024
+/** ECB rates change once a day: rates fetched less than an hour ago are reused without a request. */
+export const RATES_FRESH_MS = 60 * 60 * 1000
+export const isFresh = (cached, now = Date.now()) =>
+  !!cached && Number.isFinite(cached.fetchedAt) && now - cached.fetchedAt >= 0 && now - cached.fetchedAt < RATES_FRESH_MS
+
 export async function fetchEurRates({ fetchImpl = globalThis.fetch, timeoutMs = 8000, signal } = {}) {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), timeoutMs)
@@ -74,9 +81,22 @@ export async function fetchEurRates({ fetchImpl = globalThis.fetch, timeoutMs = 
   try {
     const res = await fetchImpl(`${RATES_URL}?base=EUR&symbols=${LIVE_CODES.join(',')}`, { signal: controller.signal })
     if (!res.ok) throw new Error(`Rate service answered ${res.status}`)
-    const data = await res.json()
+    // The real answer is about 150 bytes: refuse anything far larger instead of parsing it (I-05)
+    let data
+    if (typeof res.text === 'function') {
+      const body = await res.text()
+      if (body.length > MAX_RATES_BYTES) throw new Error('Unexpected response from the rate service')
+      try {
+        data = JSON.parse(body)
+      } catch {
+        throw new Error('Unexpected response from the rate service')
+      }
+    } else {
+      data = await res.json() // minimal Response-like objects (tests)
+    }
     const rates = sanitizeRates(data?.rates)
-    if (Object.keys(rates).length === 0 || typeof data.date !== 'string') throw new Error('Unexpected response from the rate service')
+    // A real YYYY-MM-DD date, so the page never shows "Invalid Date" (V-03)
+    if (Object.keys(rates).length === 0 || !isRealDate(data?.date)) throw new Error('Unexpected response from the rate service')
     return { date: data.date, rates }
   } finally {
     clearTimeout(timer)
@@ -87,9 +107,10 @@ export async function fetchEurRates({ fetchImpl = globalThis.fetch, timeoutMs = 
 export function readCachedRates() {
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY))
-    if (!cached || typeof cached.date !== 'string') return null
+    if (!cached || !isRealDate(cached.date)) return null
     const rates = sanitizeRates(cached.rates)
-    return Object.keys(rates).length ? { date: cached.date, rates } : null
+    if (!Object.keys(rates).length) return null
+    return Number.isFinite(cached.fetchedAt) ? { date: cached.date, rates, fetchedAt: cached.fetchedAt } : { date: cached.date, rates }
   } catch {
     return null
   }

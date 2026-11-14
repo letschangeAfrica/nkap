@@ -23,14 +23,16 @@ export function transferTotals(transfers, month) {
 
 /** Average cost per service, cheapest first: [{ service, count, cost }] */
 export function costByService(transfers) {
-  const groups = {}
+  // A Map, not a plain object: a stored service name like "__proto__" stays an ordinary key (V-01)
+  const groups = new Map()
   for (const t of transfers) {
-    groups[t.service] ??= { service: t.service, count: 0, sent: 0, fees: 0 }
-    groups[t.service].count += 1
-    groups[t.service].sent += t.amount
-    groups[t.service].fees += t.fee
+    if (!groups.has(t.service)) groups.set(t.service, { service: t.service, count: 0, sent: 0, fees: 0 })
+    const g = groups.get(t.service)
+    g.count += 1
+    g.sent += t.amount
+    g.fees += t.fee
   }
-  return Object.values(groups)
+  return [...groups.values()]
     .map((g) => ({ service: g.service, count: g.count, cost: costPercent(g.fees, g.sent) }))
     .sort((a, b) => a.cost - b.cost)
 }

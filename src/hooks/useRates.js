@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { fetchEurRates, readCachedRates, writeCachedRates } from '../utils/rates'
+import { fetchEurRates, readCachedRates, writeCachedRates, isFresh } from '../utils/rates'
 
 /**
  * Live exchange rates with a fallback.
@@ -10,6 +10,8 @@ import { fetchEurRates, readCachedRates, writeCachedRates } from '../utils/rates
 export function useRates() {
   const [state, setState] = useState(() => {
     const cached = readCachedRates()
+    // Rates fetched in the last hour are used as they are: no request on every visit (I-05)
+    if (isFresh(cached)) return { status: 'live', rates: cached.rates, date: cached.date }
     return { status: 'loading', rates: cached?.rates ?? {}, date: cached?.date ?? null }
   })
   const inFlight = useRef(null)
@@ -22,7 +24,7 @@ export function useRates() {
     try {
       const fresh = await fetchEurRates({ signal: ctrl.signal })
       if (ctrl.signal.aborted) return
-      writeCachedRates(fresh)
+      writeCachedRates({ ...fresh, fetchedAt: Date.now() })
       setState({ status: 'live', rates: fresh.rates, date: fresh.date })
     } catch {
       if (ctrl.signal.aborted) return
@@ -36,7 +38,7 @@ export function useRates() {
   }, [])
 
   useEffect(() => {
-    load()
+    if (!isFresh(readCachedRates())) load()
     return () => inFlight.current?.abort()
   }, [load])
 

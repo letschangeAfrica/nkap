@@ -9,6 +9,7 @@ import Settings from './pages/Settings'
 import NotFound from './pages/NotFound'
 import { useEffect } from 'react'
 import { t, useLang } from './i18n'
+import UpdateBanner from './components/UpdateBanner'
 
 function App() {
   const lang = useLang()
@@ -21,7 +22,9 @@ function App() {
   }, [lang])
 
   return (
-    // keyed by language: every page re-renders with the new texts and number formats
+    <>
+    <UpdateBanner key={`update-${lang}`} />
+    {/* keyed by language: every page re-renders with the new texts and number formats */}
     <Routes key={lang}>
       {/* Public marketing page, without the app navigation */}
       <Route path="/" element={<Landing />} />
@@ -37,6 +40,7 @@ function App() {
 
       <Route path="*" element={<NotFound />} />
     </Routes>
+    </>
   )
 }
 

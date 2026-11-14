@@ -102,7 +102,7 @@ function Settings() {
                   <span className="font-mono">{formatXaf(c.monthlyXaf)}</span>
                   <button
                     type="button"
-                    onClick={() => removeCommitment(c.id)}
+                    onClick={() => { if (window.confirm(t('settings.confirmRemove', { name: c.label }))) removeCommitment(c.id) }}
                     aria-label={t('settings.remove', { name: c.label })}
                     className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted hover:bg-indigo-100 hover:text-fee"
                   >

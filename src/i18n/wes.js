@@ -297,6 +297,7 @@ const wes = {
     perMonth: 'For one month ({xaf})',
     add: 'Add',
     remove: 'Remove {name}',
+    confirmRemove: 'Remove di plan "{name}"? Di transfer dem wey join am go count as other help.',
     total: 'Total for one month',
     data: 'Ya data',
     dataText: 'Nkap no get account, no get server. Everything wey yu put di stay only for dis browser, for dis phone.',
@@ -347,6 +348,11 @@ const wes = {
   },
   offline: {
     banner: 'Yu no get internet now. Everything still di work, only live rate no di work.',
+  },
+  update: {
+    ready: 'New version of Nkap don ready.',
+    reload: 'Reload',
+    later: 'Later',
   },
   notFound: {
     title: 'We no see dis page',

@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { buildServiceWorker, shellFiles, STATIC_SHELL } from './sw/buildServiceWorker.js'
+import { siteHeaders } from './scripts/siteHeaders.js'
 
 const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'))
 
@@ -36,6 +37,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), tailwindcss(), serviceWorker()],
+    preview: { headers: siteHeaders() },
     // App version for the local error log and diagnostic report (src/utils/errorLog.js)
     define: { __APP_VERSION__: JSON.stringify(version) },
     test: {

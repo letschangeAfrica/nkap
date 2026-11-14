@@ -295,6 +295,7 @@ const fr = {
     perMonth: 'Par mois ({xaf})',
     add: 'Ajouter',
     remove: 'Supprimer {name}',
+    confirmRemove: 'Supprimer l’engagement « {name} » ? Les transferts liés compteront comme autre soutien.',
     total: 'Total par mois',
     data: 'Vos données',
     dataText: "Nkap n'a ni compte ni serveur. Tout ce que vous saisissez est enregistré uniquement dans ce navigateur, sur cet appareil.",
@@ -345,6 +346,11 @@ const fr = {
   },
   offline: {
     banner: 'Vous êtes hors ligne. Tout fonctionne, sauf les taux de change en direct.',
+  },
+  update: {
+    ready: 'Une nouvelle version de Nkap est prête.',
+    reload: 'Recharger',
+    later: 'Plus tard',
   },
   notFound: {
     title: 'Page introuvable',
