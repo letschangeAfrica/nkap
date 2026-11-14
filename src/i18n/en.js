@@ -323,6 +323,17 @@ const en = {
       newer: 'This backup comes from a newer version of Nkap. Reload the page and try again.',
     },
   },
+  install: {
+    title: 'Install Nkap',
+    text: 'Add Nkap to your home screen. It opens like an app and works without internet; only live exchange rates need a connection.',
+    button: 'Install the app',
+    done: 'Nkap is installed on this device.',
+    ios: 'On iPhone: open Nkap in Safari, tap Share, then "Add to Home Screen".',
+    other: 'Use your browser menu: "Install app" or "Add to Home screen".',
+  },
+  offline: {
+    banner: "You're offline. Everything still works, except live exchange rates.",
+  },
   notFound: {
     title: 'Page not found',
     text: 'The page you are looking for does not exist.',

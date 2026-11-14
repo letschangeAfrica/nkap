@@ -337,6 +337,17 @@ const wes = {
       newer: 'Dis copy kam from new version of Nkap. Reload di page and try again.',
     },
   },
+  install: {
+    title: 'Put Nkap for ya phone',
+    text: 'Put Nkap for ya home screen. E go open like app and e di work without internet; na only live rate need connection.',
+    button: 'Put di app',
+    done: 'Nkap don enter dis phone.',
+    ios: 'For iPhone: open Nkap for Safari, touch Share, then "Add to Home Screen".',
+    other: 'Use ya browser menu: "Install app" or "Add to Home screen".',
+  },
+  offline: {
+    banner: 'Yu no get internet now. Everything still di work, only live rate no di work.',
+  },
   notFound: {
     title: 'We no see dis page',
     text: 'Di page wey yu di find no dey.',

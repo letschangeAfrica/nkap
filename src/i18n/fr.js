@@ -335,6 +335,17 @@ const fr = {
       newer: 'Cette sauvegarde vient d’une version plus récente de Nkap. Rechargez la page et réessayez.',
     },
   },
+  install: {
+    title: 'Installer Nkap',
+    text: "Ajoutez Nkap à votre écran d'accueil. Il s'ouvre comme une app et fonctionne sans internet ; seuls les taux de change en direct ont besoin d'une connexion.",
+    button: "Installer l'app",
+    done: 'Nkap est installé sur cet appareil.',
+    ios: 'Sur iPhone : ouvrez Nkap dans Safari, touchez Partager, puis « Sur l’écran d’accueil ».',
+    other: 'Utilisez le menu de votre navigateur : « Installer l’application » ou « Ajouter à l’écran d’accueil ».',
+  },
+  offline: {
+    banner: 'Vous êtes hors ligne. Tout fonctionne, sauf les taux de change en direct.',
+  },
   notFound: {
     title: 'Page introuvable',
     text: "La page que vous cherchez n'existe pas.",

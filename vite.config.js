@@ -2,6 +2,8 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { readFileSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+import { buildServiceWorker, shellFiles, STATIC_SHELL } from './sw/buildServiceWorker.js'
 
 const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'))
 
@@ -16,11 +18,24 @@ export function assertNoPublicSecrets(env) {
   }
 }
 
+/** Writes dist/sw.js with the list of built files, versioned by their content. */
+function serviceWorker() {
+  return {
+    name: 'nkap-service-worker',
+    apply: 'build',
+    generateBundle(_, bundle) {
+      const precache = [...STATIC_SHELL, ...shellFiles(Object.keys(bundle))]
+      const hash = createHash('sha256').update(precache.join('|')).digest('hex').slice(0, 10)
+      this.emitFile({ type: 'asset', fileName: 'sw.js', source: buildServiceWorker({ version: `${version}-${hash}`, precache }) })
+    },
+  }
+}
+
 export default defineConfig(({ mode }) => {
   assertNoPublicSecrets(loadEnv(mode, process.cwd(), 'VITE_'))
 
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), serviceWorker()],
     // App version for the local error log and diagnostic report (src/utils/errorLog.js)
     define: { __APP_VERSION__: JSON.stringify(version) },
     test: {

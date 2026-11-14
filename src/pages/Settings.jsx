@@ -5,6 +5,7 @@ import { loadDemoData, clearAllData } from '../utils/demoData'
 import TrashIcon from '../components/TrashIcon'
 import DiagnosticReport from '../components/DiagnosticReport'
 import BackupPanel from '../components/BackupPanel'
+import InstallApp from '../components/InstallApp'
 import { useTransactionStore } from '../store/useTransactionStore'
 import { useTransferStore } from '../store/useTransferStore'
 import { t, tError, langInfo } from '../i18n'
@@ -72,6 +73,8 @@ function Settings() {
         </div>
         <div className="w-full sm:w-80"><ThemeChoice /></div>
       </section>
+
+      <InstallApp />
 
       <section className="rounded-lg border border-indigo-100 p-6 md:p-7">
         <h2 className="font-display text-xl font-semibold">{t('settings.commitments')}</h2>

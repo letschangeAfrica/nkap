@@ -14,11 +14,13 @@ import './index.css'
 import App from './App.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import { initTheme } from './theme'
+import { initPwa } from './pwa'
 import { syncStoresAcrossTabs } from './store/syncTabs'
 import { installGlobalErrorLogging, reactRootErrorOptions } from './utils/errorLog'
 
 installGlobalErrorLogging()
 initTheme()
+initPwa()
 syncStoresAcrossTabs()
 
 createRoot(document.getElementById('root'), reactRootErrorOptions).render(
