@@ -1,4 +1,19 @@
 node_modules
 dist
-.env
 audits/
+
+# Test output
+coverage
+playwright-report
+test-results
+
+# Environment files: never commit real values
+.env
+.env.*
+!.env.example
+
+# Keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx

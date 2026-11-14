@@ -64,9 +64,13 @@ function sanitizeRates(raw) {
  * Fetch today's ECB rates (per 1 EUR) from Frankfurter. Throws on network
  * errors, timeouts, bad status codes and unexpected responses.
  */
-export async function fetchEurRates({ fetchImpl = globalThis.fetch, timeoutMs = 8000 } = {}) {
+export async function fetchEurRates({ fetchImpl = globalThis.fetch, timeoutMs = 8000, signal } = {}) {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), timeoutMs)
+  // let the caller cancel too (e.g. a newer request replaces this one)
+  const cancel = () => controller.abort()
+  if (signal?.aborted) controller.abort()
+  signal?.addEventListener('abort', cancel)
   try {
     const res = await fetchImpl(`${RATES_URL}?base=EUR&symbols=${LIVE_CODES.join(',')}`, { signal: controller.signal })
     if (!res.ok) throw new Error(`Rate service answered ${res.status}`)
@@ -76,6 +80,7 @@ export async function fetchEurRates({ fetchImpl = globalThis.fetch, timeoutMs = 
     return { date: data.date, rates }
   } finally {
     clearTimeout(timer)
+    signal?.removeEventListener('abort', cancel)
   }
 }
 

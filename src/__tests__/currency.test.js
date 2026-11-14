@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { EUR_TO_XAF, eurToXaf, xafToEur, parseAmount, transferResult, costLevel, formatEur, formatXaf } from '../utils/currency'
+import { EUR_TO_XAF, eurToXaf, xafToEur, parseAmount, transferResult, costLevel, formatEur, formatEur0, formatXaf } from '../utils/currency'
 
 describe('peg conversions', () => {
   test('uses the official fixed rate', () => {
@@ -31,6 +31,11 @@ describe('parseAmount', () => {
     expect(parseAmount('abc')).toBeNaN()
     expect(parseAmount(undefined)).toBeNaN()
   })
+  test('accepts the largest amount and rejects a bare separator', () => {
+    expect(parseAmount('999999999')).toBe(999999999)
+    expect(parseAmount(',5')).toBeNaN()
+    expect(parseAmount('5,')).toBeNaN()
+  })
 })
 
 describe('transferResult', () => {
@@ -51,6 +56,9 @@ describe('transferResult', () => {
   test('accepts a zero fee', () => {
     expect(transferResult(10, 0)).toMatchObject({ valid: true, cost: 0 })
   })
+  test('net and cost avoid floating-point drift', () => {
+    expect(transferResult('0.30', '0.10')).toMatchObject({ net: 0.2, cost: 33.3 })
+  })
 })
 
 describe('costLevel', () => {
@@ -68,5 +76,8 @@ describe('formatters', () => {
   test('format EUR and XAF', () => {
     expect(formatEur(1250)).toBe('1,250.00 €')
     expect(formatXaf(92227.6)).toBe('92,228 XAF')
+  })
+  test('formatEur0 rounds to whole euros for headline figures', () => {
+    expect(formatEur0(1249.5)).toBe('1,250 €')
   })
 })

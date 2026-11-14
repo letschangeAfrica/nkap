@@ -116,6 +116,9 @@ function Settings() {
         <p className="mt-1 max-w-prose text-sm text-muted">
           {t('settings.dataText')}
         </p>
+        <p className="mt-2 max-w-prose text-sm font-semibold text-fee" data-testid="shared-device-warning">
+          {t('settings.sharedDevice')}
+        </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <button type="button" onClick={handleDemo} className="rounded-md border border-accent px-4 py-2.5 text-sm font-semibold text-accent hover:bg-indigo-100">
             {t('settings.loadDemo')}

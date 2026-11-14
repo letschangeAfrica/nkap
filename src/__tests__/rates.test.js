@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import { describe, test, expect, vi, beforeEach } from 'vitest'
-import { convert, unitRate, formatMoney, fetchEurRates, readCachedRates, writeCachedRates } from '../utils/rates'
+import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
+import { convert, unitRate, formatMoney, formatRate, fetchEurRates, readCachedRates, writeCachedRates } from '../utils/rates'
 
 const live = { USD: 1.1, GBP: 0.85 }
 
@@ -28,26 +28,73 @@ describe('formatMoney', () => {
   })
 })
 
+describe('formatRate', () => {
+  test.each([
+    [655.957, '655.957'],
+    [1.23456, '1.2346'],
+    [1 / 655.957, '0.001524'],
+  ])('%s → %s', (n, text) => {
+    expect(formatRate(n)).toBe(text)
+  })
+})
+
 describe('fetchEurRates', () => {
   const ok = (body) => vi.fn().mockResolvedValue({ ok: true, json: async () => body })
+  // a fetch that only settles when it is aborted
+  const hanging = () => vi.fn((_, { signal }) => new Promise((_, reject) => {
+    const fail = () => reject(new DOMException('Aborted', 'AbortError'))
+    if (signal.aborted) fail()
+    signal.addEventListener('abort', fail)
+  }))
+
+  afterEach(() => vi.useRealTimers())
 
   test('returns the date and the rates it knows', async () => {
     const fetchImpl = ok({ amount: 1, base: 'EUR', date: '2026-11-12', rates: { USD: 1.1, GBP: 0.85, XYZ: 3 } })
     await expect(fetchEurRates({ fetchImpl })).resolves.toEqual({ date: '2026-11-12', rates: { USD: 1.1, GBP: 0.85 } })
     expect(fetchImpl.mock.calls[0][0]).toContain('base=EUR')
   })
-  test('throws on a bad status, a bad body or a network error', async () => {
-    await expect(fetchEurRates({ fetchImpl: vi.fn().mockResolvedValue({ ok: false, status: 500 }) })).rejects.toThrow('500')
-    await expect(fetchEurRates({ fetchImpl: ok({ hello: 'world' }) })).rejects.toThrow(/unexpected/i)
-    await expect(fetchEurRates({ fetchImpl: vi.fn().mockRejectedValue(new TypeError('Failed to fetch')) })).rejects.toThrow()
+
+  test.each([
+    ['a bad status', vi.fn().mockResolvedValue({ ok: false, status: 500 }), '500'],
+    ['an unexpected body', ok({ hello: 'world' }), /unexpected/i],
+    ['a network error', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')), /failed to fetch/i],
+  ])('throws on %s', async (_, fetchImpl, error) => {
+    await expect(fetchEurRates({ fetchImpl })).rejects.toThrow(error)
+  })
+
+  test('gives up after the timeout', async () => {
+    vi.useFakeTimers()
+    const p = fetchEurRates({ fetchImpl: hanging(), timeoutMs: 50 })
+    vi.advanceTimersByTime(50)
+    await expect(p).rejects.toThrow(/abort/i)
+  })
+
+  test('can be cancelled by the caller', async () => {
+    const caller = new AbortController()
+    const p = fetchEurRates({ fetchImpl: hanging(), signal: caller.signal })
+    caller.abort()
+    await expect(p).rejects.toThrow(/abort/i)
+  })
+
+  test('an already-cancelled signal aborts straight away', async () => {
+    const caller = new AbortController()
+    caller.abort()
+    const fetchImpl = hanging()
+    await expect(fetchEurRates({ fetchImpl, signal: caller.signal })).rejects.toThrow()
+    expect(fetchImpl.mock.calls[0][1].signal.aborted).toBe(true)
   })
 })
 
 describe('rate cache', () => {
   beforeEach(() => localStorage.clear())
-  test('round-trips and ignores broken values', () => {
+
+  test('round-trips saved rates', () => {
     writeCachedRates({ date: '2026-11-12', rates: live })
     expect(readCachedRates()).toEqual({ date: '2026-11-12', rates: live })
+  })
+
+  test('ignores a broken saved value', () => {
     localStorage.setItem('nkap-rates', '{broken')
     expect(readCachedRates()).toBeNull()
   })

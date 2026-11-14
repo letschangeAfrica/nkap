@@ -265,6 +265,7 @@ const en = {
     total: 'Total per month',
     data: 'Your data',
     dataText: 'Nkap has no account and no server. Everything you enter is stored only in this browser, on this device.',
+    sharedDevice: 'It is not encrypted or locked: anyone who uses this browser can see and delete it. Avoid using Nkap on a shared computer.',
     loadDemo: 'Load demo data',
     deleteAll: 'Delete all my data',
     confirmDemo: 'Replace your data with demo data?',

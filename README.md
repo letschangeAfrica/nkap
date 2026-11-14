@@ -56,7 +56,10 @@ git clone https://github.com/letschangeAfrica/nkap.git
 cd nkap
 npm install
 npm run dev        # http://localhost:5173
-npm test           # watch mode; `npm test -- --run` for a single run
+npm test           # watch mode (works from any terminal, including VS Code's c:\ path)
+npm run test:run   # single run
+npm run test:coverage
+npm run test:e2e   # Playwright smoke tests on the production build (first: npx playwright install chromium)
 npm run build      # production build in dist/
 ```
 

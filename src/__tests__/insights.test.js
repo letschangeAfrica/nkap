@@ -22,6 +22,12 @@ describe('buildInsights', () => {
   test('no data, no insights', () => {
     expect(buildInsights({ transactions: [], transfers: [], month: '2026-11' })).toEqual([])
   })
+
+  test('January is compared with the previous December, and a cheaper month says so', () => {
+    const tr = (date, fee) => ({ amount: 100, fee, received: 0, service: 'Wise', date })
+    const insights = buildInsights({ transactions: [], transfers: [tr('2025-12-10', 10), tr('2026-01-10', 1)], month: '2026-01' })
+    expect(insights.find((i) => i.id === 'trend').text).toBe('Your transfers cost 1% this month, down from 10% last month.')
+  })
 })
 
 describe('welcome flag', () => {

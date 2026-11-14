@@ -5,6 +5,8 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { LANGUAGES, t, tError, useLangStore, detectLanguage } from '../i18n'
 import en from '../i18n/en'
+import fr from '../i18n/fr'
+import wes from '../i18n/wes'
 import { formatEur, formatXaf } from '../utils/currency'
 import { formatMonth } from '../utils/dates'
 import { buildInsights } from '../utils/insights'
@@ -15,7 +17,10 @@ const keys = (obj, prefix = '') =>
   Object.entries(obj).flatMap(([k, v]) => (v && typeof v === 'object' ? keys(v, `${prefix}${k}.`) : [`${prefix}${k}`]))
 const placeholders = (s) => (s.match(/\{\w+\}/g) ?? []).sort().join()
 
-afterEach(() => useLangStore.setState({ lang: 'en' }))
+afterEach(() => {
+  useLangStore.setState({ lang: 'en' })
+  localStorage.clear()
+})
 
 describe('dictionaries', () => {
   const reference = keys(en).filter((k) => !k.startsWith('errors.'))
@@ -49,13 +54,24 @@ describe('t()', () => {
   })
 
   test('first visit follows the browser language', () => {
-    const original = Object.getOwnPropertyDescriptor(Navigator.prototype, 'languages')
-    Object.defineProperty(navigator, 'languages', { value: ['fr-FR', 'en'], configurable: true })
-    expect(detectLanguage()).toBe('fr')
-    Object.defineProperty(navigator, 'languages', { value: ['de-DE'], configurable: true })
-    expect(detectLanguage()).toBe('en')
-    if (original) Object.defineProperty(Navigator.prototype, 'languages', original)
-    delete navigator.languages
+    const setLanguages = (value) => Object.defineProperty(navigator, 'languages', { value, configurable: true })
+    try {
+      setLanguages(['fr-FR', 'en'])
+      expect(detectLanguage()).toBe('fr')
+      setLanguages(['de-DE'])
+      expect(detectLanguage()).toBe('en')
+    } finally {
+      delete navigator.languages // back to jsdom's own getter on Navigator.prototype
+    }
+  })
+
+  test('ignores an unknown language code, whether saved or set', async () => {
+    useLangStore.getState().setLang('xx')
+    expect(useLangStore.getState().lang).toBe('en')
+
+    localStorage.setItem('nkap-lang', JSON.stringify({ state: { lang: 'xx' }, version: 0 }))
+    await useLangStore.persist.rehydrate()
+    expect(useLangStore.getState().lang).toBe('en')
   })
 })
 
@@ -85,15 +101,15 @@ describe('switching language in the app', () => {
   test('the whole page changes and <html lang> follows', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><App /></MemoryRouter>)
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Know what supporting your family really costs.')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(en.landing.title)
 
     await user.selectOptions(screen.getByLabelText('Language'), 'fr')
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Sachez ce que soutenir votre famille vous coûte vraiment.')
+    expect(await screen.findByRole('heading', { level: 1, name: fr.landing.title })).toBeInTheDocument()
     expect(document.documentElement.lang).toBe('fr')
-    expect(document.title).toMatch(/Budget et soutien familial/)
+    expect(document.title).toBe(fr.meta.title)
 
     await user.selectOptions(screen.getByLabelText('Langue'), 'wes')
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/Sabi how much/)
+    expect(await screen.findByRole('heading', { level: 1, name: wes.landing.title })).toBeInTheDocument()
     expect(document.documentElement.lang).toBe('wes')
   })
 })

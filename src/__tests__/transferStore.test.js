@@ -1,8 +1,11 @@
 // @vitest-environment jsdom
 import { describe, test, expect, beforeEach } from 'vitest'
 import { useTransferStore } from '../store/useTransferStore'
+import { transferInput, useFixedDate } from './helpers/fixtures'
 
-const valid = { amount: '100', fee: '1.20', service: 'Wise', recipient: ' Maman, Douala ', date: '2026-11-12' }
+useFixedDate()
+
+const valid = transferInput({ recipient: ' Maman, Douala ' })
 
 describe('useTransferStore', () => {
   beforeEach(() => {
@@ -12,16 +15,18 @@ describe('useTransferStore', () => {
 
   test('adds a transfer with computed received amount and cost', () => {
     const result = useTransferStore.getState().addTransfer(valid)
+
     expect(result.ok).toBe(true)
-    const [t] = useTransferStore.getState().transfers
-    expect(t).toMatchObject({ amount: 100, fee: 1.2, received: 64809, cost: 1.2, recipient: 'Maman, Douala' })
+    expect(useTransferStore.getState().transfers[0]).toMatchObject({ amount: 100, fee: 1.2, received: 64809, cost: 1.2, recipient: 'Maman, Douala' })
   })
 
-  test('rejects invalid transfers without changing the state', () => {
-    const store = useTransferStore.getState()
-    expect(store.addTransfer({ ...valid, fee: '150' }).ok).toBe(false)
-    expect(store.addTransfer({ ...valid, recipient: '  ' }).error).toMatch(/who received/i)
-    expect(store.addTransfer({ ...valid, date: '' }).ok).toBe(false)
+  test.each([
+    ['a fee larger than the amount', { fee: '150' }, /fee cannot/i],
+    ['a blank recipient', { recipient: '  ' }, /who received/i],
+    ['no date', { date: '' }, /date/i],
+    ['a date after today', { date: '2026-11-13' }, /date/i],
+  ])('rejects %s without changing the state', (_, patch, error) => {
+    expect(useTransferStore.getState().addTransfer({ ...valid, ...patch }).error).toMatch(error)
     expect(useTransferStore.getState().transfers).toHaveLength(0)
   })
 

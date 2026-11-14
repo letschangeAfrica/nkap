@@ -276,6 +276,7 @@ const fr = {
     total: 'Total par mois',
     data: 'Vos données',
     dataText: "Nkap n'a ni compte ni serveur. Tout ce que vous saisissez est enregistré uniquement dans ce navigateur, sur cet appareil.",
+    sharedDevice: "Ces données ne sont ni chiffrées ni verrouillées : toute personne qui utilise ce navigateur peut les voir et les supprimer. Évitez d'utiliser Nkap sur un ordinateur partagé.",
     loadDemo: 'Charger les données de démo',
     deleteAll: 'Supprimer toutes mes données',
     confirmDemo: 'Remplacer vos données par les données de démo ?',

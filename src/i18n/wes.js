@@ -278,6 +278,7 @@ const wes = {
     total: 'Total for one month',
     data: 'Ya data',
     dataText: 'Nkap no get account, no get server. Everything wey yu put di stay only for dis browser, for dis phone.',
+    sharedDevice: 'E no get lock, e no di hide: anybody wey di use dis browser fit see am and delete am. No use Nkap for computer wey plenty people di share.',
     loadDemo: 'Load demo data',
     deleteAll: 'Delete all ma data',
     confirmDemo: 'Change ya data put demo data?',

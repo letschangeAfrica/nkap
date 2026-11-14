@@ -21,7 +21,7 @@ function RateStatus({ status, date, retry }) {
           ? t('converter.cached', { date: formatDate(date) })
           : t('converter.offline')}
       </p>
-      <button type="button" onClick={retry} className="font-semibold text-accent underline underline-offset-4">{t('converter.retry')}</button>
+      <button type="button" onClick={retry} disabled={status === 'loading'} className="font-semibold text-accent underline underline-offset-4 disabled:opacity-50">{t('converter.retry')}</button>
     </div>
   )
 }

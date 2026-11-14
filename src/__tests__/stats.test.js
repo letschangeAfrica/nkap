@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { transferTotals, costByService, sortByDateDesc } from '../utils/stats'
+import { transferTotals, costByService, sortByDateDesc, transactionTotals, potentialSavings } from '../utils/stats'
 
 const transfers = [
   { amount: 100, fee: 1.2, received: 64809, service: 'Wise', date: '2026-11-12', createdAt: 2 },
@@ -26,6 +26,33 @@ describe('costByService', () => {
       ['Orange Money', 4.3],
       ['Western Union', 16.4],
     ])
+  })
+})
+
+describe('transactionTotals', () => {
+  test('without a month, totals every transaction', () => {
+    const transactions = [
+      { type: 'income', amount: 1000, date: '2026-10-01' },
+      { type: 'expense', amount: 250.5, date: '2026-10-03' },
+      { type: 'expense', amount: 100, date: '2026-11-03' },
+    ]
+    expect(transactionTotals(transactions)).toEqual({ income: 1000, expenses: 350.5, balance: 649.5 })
+  })
+})
+
+describe('performance', () => {
+  test('dashboard maths stays fast with ten years of transfers', () => {
+    const services = ['Wise', 'Western Union', 'Orange Money']
+    const many = Array.from({ length: 5000 }, (_, i) => ({
+      amount: 100, fee: 1 + (i % 5), received: 64000, service: services[i % 3],
+      date: `20${16 + (i % 10)}-0${1 + (i % 9)}-10`, createdAt: i,
+    }))
+    const t0 = performance.now()
+    transferTotals(many, '2026-01')
+    costByService(many)
+    potentialSavings(many, '2026-01')
+    sortByDateDesc(many)
+    expect(performance.now() - t0).toBeLessThan(200) // generous, to stay stable on slow CI machines
   })
 })
 
