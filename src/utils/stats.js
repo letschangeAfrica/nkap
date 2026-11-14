@@ -1,4 +1,5 @@
 import { monthKey } from './dates'
+import { costPercent } from './currency'
 
 const round2 = (n) => Math.round(n * 100) / 100
 
@@ -16,7 +17,7 @@ export function transferTotals(transfers, month) {
   const sent = round2(list.reduce((sum, t) => sum + t.amount, 0))
   const fees = round2(list.reduce((sum, t) => sum + t.fee, 0))
   const received = list.reduce((sum, t) => sum + t.received, 0)
-  const cost = sent > 0 ? Math.round((fees / sent) * 1000) / 10 : 0
+  const cost = costPercent(fees, sent)
   return { count: list.length, sent, fees, received, cost }
 }
 
@@ -30,7 +31,7 @@ export function costByService(transfers) {
     groups[t.service].fees += t.fee
   }
   return Object.values(groups)
-    .map((g) => ({ service: g.service, count: g.count, cost: Math.round((g.fees / g.sent) * 1000) / 10 }))
+    .map((g) => ({ service: g.service, count: g.count, cost: costPercent(g.fees, g.sent) }))
     .sort((a, b) => a.cost - b.cost)
 }
 

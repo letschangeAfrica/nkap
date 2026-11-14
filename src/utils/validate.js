@@ -37,6 +37,19 @@ export const isTransaction = (t) =>
 export const isCommitment = (c) => !!c && isStr(c.id) && isStr(c.label) && isPos(c.monthlyXaf)
 
 /**
+ * Reload a persisted store from localStorage right before it writes, so a save
+ * never overwrites what another tab saved in the meantime. With localStorage
+ * (synchronous) Zustand's rehydrate() completes before it returns.
+ */
+export function readLatest(api) {
+  try {
+    api.persist?.rehydrate()
+  } catch {
+    /* storage unavailable: keep the in-memory state */
+  }
+}
+
+/**
  * Build a Zustand `persist` merge that keeps only well-formed items, so bad
  * saved data is dropped instead of crashing the app.
  */

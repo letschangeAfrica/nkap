@@ -14,8 +14,10 @@ import './index.css'
 import App from './App.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import { initTheme } from './theme'
+import { syncStoresAcrossTabs } from './store/syncTabs'
 
 initTheme()
+syncStoresAcrossTabs()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

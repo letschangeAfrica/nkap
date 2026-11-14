@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { parseAmount, transferResult } from '../utils/currency'
 import { SERVICES } from '../utils/services'
-import { validDate, cleanText, isTransfer, sanitizedMerge } from '../utils/validate'
+import { validDate, cleanText, isTransfer, sanitizedMerge, readLatest } from '../utils/validate'
 
 /**
  * Money sent home. Each transfer stores what was sent (EUR), the fee (EUR),
@@ -11,7 +11,7 @@ import { validDate, cleanText, isTransfer, sanitizedMerge } from '../utils/valid
  */
 export const useTransferStore = create(
   persist(
-    (set) => ({
+    (set, get, api) => ({
       transfers: [],
 
       /** Returns { ok: true, transfer } or { ok: false, error } */
@@ -34,11 +34,15 @@ export const useTransferStore = create(
           received: result.received,
           cost: result.cost,
         }
+        readLatest(api) // pick up anything another tab saved since this tab loaded
         set((state) => ({ transfers: [transfer, ...state.transfers] }))
         return { ok: true, transfer }
       },
 
-      removeTransfer: (id) => set((state) => ({ transfers: state.transfers.filter((t) => t.id !== id) })),
+      removeTransfer: (id) => {
+        readLatest(api)
+        set((state) => ({ transfers: state.transfers.filter((t) => t.id !== id) }))
+      },
 
       clearTransfers: () => set({ transfers: [] }),
     }),

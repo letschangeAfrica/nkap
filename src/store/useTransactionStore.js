@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { parseAmount } from '../utils/currency'
-import { validDate, cleanText, isTransaction, sanitizedMerge } from '../utils/validate'
+import { validDate, cleanText, isTransaction, sanitizedMerge, readLatest } from '../utils/validate'
 
 export const CATEGORIES = {
   income: ['Salary', 'Scholarship', 'Freelance', 'Family help', 'Other income'],
@@ -11,7 +11,7 @@ export const CATEGORIES = {
 /** Personal income and expenses in EUR (the "my life" side of the budget). */
 export const useTransactionStore = create(
   persist(
-    (set) => ({
+    (set, get, api) => ({
       transactions: [],
 
       /** Returns { ok: true, transaction } or { ok: false, error } */
@@ -31,11 +31,15 @@ export const useTransactionStore = create(
           date,
           note: cleanText(note, 80),
         }
+        readLatest(api) // pick up anything another tab saved since this tab loaded
         set((state) => ({ transactions: [transaction, ...state.transactions] }))
         return { ok: true, transaction }
       },
 
-      removeTransaction: (id) => set((state) => ({ transactions: state.transactions.filter((t) => t.id !== id) })),
+      removeTransaction: (id) => {
+        readLatest(api)
+        set((state) => ({ transactions: state.transactions.filter((t) => t.id !== id) }))
+      },
 
       clearTransactions: () => set({ transactions: [] }),
     }),

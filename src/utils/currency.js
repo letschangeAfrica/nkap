@@ -30,6 +30,18 @@ export function parseAmount(value) {
   return AMOUNT_RE.test(s) ? Number(s.replace(',', '.')) : NaN
 }
 
+const cents = (x) => Math.round(x * 100)
+
+/**
+ * Fee as a percentage of the amount, 1 decimal. Worked out in whole cents so
+ * half-way cases round the same way every time: with plain floats 9.95/100
+ * gave 9.9 % (Medium) while 4.95/100 gave 5.0 %. Now 9.95 € on 100 € is 10.0 % (High).
+ */
+export function costPercent(fee, amount) {
+  const a = cents(amount)
+  return a > 0 ? Math.round((cents(fee) * 1000) / a) / 10 : 0
+}
+
 /**
  * Result of a transfer where the fee is taken from the amount sent.
  * Returns { valid: true, net, received, cost } or { valid: false, error }.
@@ -47,7 +59,7 @@ export function transferResult(amount, fee) {
     valid: true,
     net,
     received: eurToXaf(net),
-    cost: Math.round((f / a) * 1000) / 10, // percentage, 1 decimal
+    cost: costPercent(f, a), // percentage, 1 decimal
   }
 }
 
