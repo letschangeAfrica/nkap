@@ -4,6 +4,9 @@ import { formatXaf, xafToEur, formatEur } from '../utils/currency'
 import { loadDemoData, clearAllData } from '../utils/demoData'
 import TrashIcon from '../components/TrashIcon'
 import DiagnosticReport from '../components/DiagnosticReport'
+import BackupPanel from '../components/BackupPanel'
+import { useTransactionStore } from '../store/useTransactionStore'
+import { useTransferStore } from '../store/useTransferStore'
 import { t, tError, langInfo } from '../i18n'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import ThemeChoice from '../components/ThemeChoice'
@@ -19,6 +22,7 @@ function Settings() {
   const [label, setLabel] = useState('')
   const [monthlyXaf, setMonthlyXaf] = useState('')
   const [error, setError] = useState('')
+  const hasData = useTransactionStore((s) => s.transactions.length) + useTransferStore((s) => s.transfers.length) + commitments.length > 0
   const [notice, setNotice] = useState('')
 
   const total = commitments.reduce((sum, c) => sum + c.monthlyXaf, 0)
@@ -129,6 +133,7 @@ function Settings() {
           </button>
         </div>
         {notice && <p role="status" className="mt-4 text-sm font-semibold text-received">{notice}</p>}
+        <BackupPanel hasData={hasData} />
         <p className="mt-6 max-w-prose text-sm text-muted">{t('diagnostics.help')}</p>
         <DiagnosticReport className="mt-3" />
       </section>

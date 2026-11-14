@@ -5,6 +5,7 @@ import { transferResult } from './currency'
 import { lastMonths } from './stats'
 import { setWelcomeDone } from './welcome'
 import { clearErrorLog } from './errorLog'
+import { setLastBackup } from './backup'
 import { t } from '../i18n'
 
 /**
@@ -100,4 +101,5 @@ export function clearAllData() {
   useCommitmentStore.getState().clearCommitments()
   setWelcomeDone(false)
   clearErrorLog() // "Delete all my data" means everything, the diagnostic log included
+  setLastBackup(null)
 }
