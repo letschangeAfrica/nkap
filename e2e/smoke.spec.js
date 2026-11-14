@@ -20,7 +20,8 @@ test('a saved transfer survives a reload', async ({ page }) => {
 test('the converter works offline on the EUR/XAF peg', async ({ page }) => {
   await page.route('**/api.frankfurter.dev/**', (route) => route.abort())
   await page.goto('/converter')
-  await expect(page.getByTestId('result')).toHaveTextContent('65,596 XAF')
+  // toHaveText (Playwright) retries until the animated number settles; toHaveTextContent is jest-dom only
+  await expect(page.getByTestId('result')).toHaveText('65,596 XAF')
 })
 
 test('a deep link to an app page is served', async ({ page }) => {

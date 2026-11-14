@@ -24,8 +24,8 @@ describe('Landing', () => {
     // Fee models in utils/exampleFees.js, worked out by hand:
     // Wise 0.30 + 0.9 % = 1.65 € → 148.35 € → 97,311 XAF
     // Orange Money 4.3 % = 6.45 € → 143.55 € → 94,163 XAF
-    // Western Union 4.90 + 3.5 % = 10.15 € → 139.85 € → 91,735 XAF
-    for (const xaf of ['97,311 XAF', '94,163 XAF', '91,735 XAF']) {
+    // Western Union 4.90 + 3.5 % = 10.15 € → 139.85 € → 91,735.59 → 91,736 XAF
+    for (const xaf of ['97,311 XAF', '94,163 XAF', '91,736 XAF']) {
       expect(screen.getAllByText(xaf)).not.toHaveLength(0)
     }
   })

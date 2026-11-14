@@ -52,7 +52,8 @@ function Dashboard() {
     return sortByDateDesc(items).slice(0, 5)
   }, [transactions, transfers])
 
-  const isEmpty = transactions.length === 0 && transfers.length === 0
+  // Must cover everything loadDemoData replaces, so "Explore demo" never shows over real data
+  const isEmpty = transactions.length === 0 && transfers.length === 0 && commitments.length === 0
   const [showWelcome, setShowWelcome] = useState(() => !welcomeDone())
   const finishWelcome = () => {
     setWelcomeDone()

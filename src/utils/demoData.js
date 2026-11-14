@@ -64,12 +64,27 @@ export function buildDemoData(now = new Date()) {
   return { transactions, transfers, commitments }
 }
 
-/** Replace everything with the demo data. */
-export function loadDemoData(now = new Date()) {
+/** True when the device holds any of the user's own data (transactions, transfers or commitments). */
+export function hasUserData() {
+  return (
+    useTransactionStore.getState().transactions.length > 0 ||
+    useTransferStore.getState().transfers.length > 0 ||
+    useCommitmentStore.getState().commitments.length > 0
+  )
+}
+
+/**
+ * Replace everything with the demo data. Refuses to overwrite the user's own
+ * data unless the caller has asked them first and passes `{ overwrite: true }`.
+ * Returns true when the demo data was loaded.
+ */
+export function loadDemoData(now = new Date(), { overwrite = false } = {}) {
+  if (!overwrite && hasUserData()) return false
   const { transactions, transfers, commitments } = buildDemoData(now)
   useTransactionStore.setState({ transactions })
   useTransferStore.setState({ transfers })
   useCommitmentStore.setState({ commitments })
+  return true
 }
 
 /** Delete all of the user's data from the device. */

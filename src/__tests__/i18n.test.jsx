@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, test, expect, afterEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { LANGUAGES, t, tError, useLangStore, detectLanguage } from '../i18n'
@@ -18,6 +18,9 @@ const keys = (obj, prefix = '') =>
 const placeholders = (s) => (s.match(/\{\w+\}/g) ?? []).sort().join()
 
 afterEach(() => {
+  // Unmount first: resetting the language while <App /> is still mounted re-renders it
+  // outside act(), which setupTests.js turns into a failure.
+  cleanup()
   useLangStore.setState({ lang: 'en' })
   localStorage.clear()
 })

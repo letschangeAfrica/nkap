@@ -33,7 +33,7 @@ function Settings() {
 
   const handleDemo = () => {
     if (window.confirm(t('settings.confirmDemo'))) {
-      loadDemoData()
+      loadDemoData(undefined, { overwrite: true })
       setNotice(t('settings.demoLoaded'))
     }
   }
